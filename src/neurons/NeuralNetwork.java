@@ -2,6 +2,8 @@ package neurons;
 
 import operations.*;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import org.ejml.simple.*;
@@ -22,6 +24,7 @@ public class NeuralNetwork {
     private SimpleMatrix b2;
     private ArrayList<SimpleMatrix> activationValues = new ArrayList<>();
     private ArrayList<SimpleMatrix> gradients = new ArrayList<>();
+    private ArrayList<Double> trainingCost = new ArrayList<>();
 
 
     /**
@@ -54,7 +57,7 @@ public class NeuralNetwork {
         ApplySpecial addVector = new ApplySpecial();
         // Z value for Layer 1
         SimpleMatrix Z1 = w1.mult(input);
-        Z1 = addVector.applyVector(Z1,b1);
+        Z1 = addVector.applyVectorAddition(Z1,b1);
         // Activation value for Layer 1
         SimpleMatrix a1 = tanh.applyFunction(Z1);
         // Z value for Layer 2
@@ -93,7 +96,7 @@ public class NeuralNetwork {
      * @param actualOutput  The output the neural network should produce, given the input
      */
     public void backwardsPropagation(SimpleMatrix input, SimpleMatrix actualOutput) {
-        ApplySpecial meanAlongRows = new ApplySpecial();
+        ApplySpecial special = new ApplySpecial();
         // Get activation values
         SimpleMatrix a1 = activationValues.get(0);
         SimpleMatrix a2 = activationValues.get(1);
@@ -106,9 +109,9 @@ public class NeuralNetwork {
         double db2Content = dZ2.elementSum()/w1.numRows();
         db2.setRow(0,0,db2Content);
 
-        SimpleMatrix dZ1 = w2.transpose().mult(dZ2).mult(a1.elementPower(2).negative().plus(1));
+        SimpleMatrix dZ1 = w2.transpose().mult(dZ2).elementMult(a1.elementPower(2).negative().plus(1));
         SimpleMatrix dW1 = dZ1.mult(input.transpose()).scale(1.0/w1.numRows());
-        SimpleMatrix db1 = meanAlongRows.meanAlongRows(dZ1,1,1).scale(1.0/w1.numRows()); // mode 1: sum
+        SimpleMatrix db1 = special.meanAlongRows(dZ1,1,1).scale(1.0/w1.numRows()); // mode 1: sum
 
         // Save Results
         gradients.add(dW1);
@@ -142,11 +145,27 @@ public class NeuralNetwork {
      * @param n_iterations  The number of iterations wanted
      * @param learningRate  The size of the changes made in each iteration
      */
-    public void model(SimpleMatrix input, SimpleMatrix actualOutput, int n_iterations, double learningRate){
+    // For testing with the same initial w and b of the Python version
+//    this.w1 = new SimpleMatrix(4,2);
+//    w1.setRow(0,0,0.4967141530112327,-0.13826430117118466);
+//    w1.setRow(1,0,0.6476885381006925,1.5230298564080254);
+//    w1.setRow(2,0,-0.23415337472333597,-0.23413695694918055);
+//    w1.setRow(3,0,1.5792128155073915,0.7674347291529088);
+//    this.w2 =  new SimpleMatrix(1,4);
+//    w2.setRow(0,0,-0.4694743859349521,0.5425600435859647,-0.46341769281246226,-0.46572975357025687);
+    public void model(SimpleMatrix input, SimpleMatrix actualOutput, int n_iterations, double learningRate) throws FileNotFoundException {
         initializeParameters(nFirst,nHidden,nOut);
+        this.w1 = new SimpleMatrix(4,2);
+        w1.setRow(0,0,0.4967141530112327,-0.13826430117118466);
+        w1.setRow(1,0,0.6476885381006925,1.5230298564080254);
+        w1.setRow(2,0,-0.23415337472333597,-0.23413695694918055);
+        w1.setRow(3,0,1.5792128155073915,0.7674347291529088);
+        this.w2 =  new SimpleMatrix(1,4);
+        w2.setRow(0,0,-0.4694743859349521,0.5425600435859647,-0.46341769281246226,-0.46572975357025687);
         for (int i = 0; i < n_iterations; i++){
-            forwardsPropagation(input);
-//            double cost = calculateCost(A2,actualOutput);
+            SimpleMatrix A2 = forwardsPropagation(input);
+            double cost = calculateCost(A2,actualOutput);
+            trainingCost.add(cost);
             backwardsPropagation(input,actualOutput);
             updateParameters(learningRate);
         }
@@ -183,5 +202,29 @@ public class NeuralNetwork {
 
     public SimpleMatrix getB2() {
         return b2;
+    }
+
+    public ArrayList<Double> getTrainingCost() {
+        return trainingCost;
+    }
+
+    public void setW1(SimpleMatrix w1) {
+        this.w1 = w1;
+    }
+
+    public void setW2(SimpleMatrix w2) {
+        this.w2 = w2;
+    }
+
+    public void setB1(SimpleMatrix b1) {
+        this.b1 = b1;
+    }
+
+    public void setB2(SimpleMatrix b2) {
+        this.b2 = b2;
+    }
+
+    public void setRandomSeed(int randomSeed) {
+        this.randomSeed = randomSeed;
     }
 }

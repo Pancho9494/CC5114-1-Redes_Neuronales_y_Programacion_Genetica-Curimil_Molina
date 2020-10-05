@@ -8,23 +8,44 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import neurons.NeuralNetwork;
 import operations.SpaceClassifier;
+import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
 
 public class FXPlotter extends Application {
     ArrayList<Double> xData = new ArrayList<>();
     ArrayList<Double> yData = new ArrayList<>();
-    SpaceClassifier classifier = new SpaceClassifier();
+//    SpaceClassifier classifier = new SpaceClassifier();
+    NeuralNetwork NN = new NeuralNetwork();
+    SimpleMatrix training;
+    SimpleMatrix trainingLabels;
+    ArrayList<Double> lossData = new ArrayList<>();
+    int iterations;
 
 
     @Override
     public void start(Stage stage) throws Exception {
-        classifier.train(0.1,1540);
-        classifier.generateTestPoints(1400);
-        this.xData = classifier.testingXInputs;
-        this.yData = classifier.testingYInputs;
+        setUpData();
+        this.iterations = 10000;
+        NN.model(training,trainingLabels,iterations,0.01);
+
         init(stage);
+//        classifier.train(0.1,1540);
+//        classifier.generateTestPoints(1400);
+//        this.xData = classifier.testingXInputs;
+//        this.yData = classifier.testingYInputs;
+    }
+
+
+    public void setUpData(){
+        training = new SimpleMatrix(2,4);
+        training.setRow(0,0,0,0,1,1);
+        training.setRow(1,0,0,1,0,1);
+
+        trainingLabels = new SimpleMatrix(1,4);
+        trainingLabels.setRow(0,0,0,1,1,0);
     }
 
 
@@ -35,10 +56,10 @@ public class FXPlotter extends Application {
         Scene scene = new Scene(root, width, height);
 
         // Set axis
-        final NumberAxis xAxis = new NumberAxis(-26,26,1);
-        xAxis.setLabel("X");
+        final NumberAxis xAxis = new NumberAxis(0,iterations,1);
+        xAxis.setLabel("Epoch");
         final NumberAxis yAxis = new NumberAxis(-26,26,1);
-        yAxis.setLabel("Y");
+        yAxis.setLabel("Loss");
 
         // Set graph points (base chart)
         ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
@@ -56,7 +77,6 @@ public class FXPlotter extends Application {
                 blueData.getData().add(new XYChart.Data<Number, Number>(xPoint, yPoint));
             }
         }
-
 
 
         // Set line plot

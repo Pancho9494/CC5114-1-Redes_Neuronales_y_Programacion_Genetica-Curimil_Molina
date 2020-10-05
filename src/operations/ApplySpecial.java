@@ -29,7 +29,7 @@ public class ApplySpecial extends ApplyToMatrix{
      * @param input2 Vector
      * @return The sum of the inputs given the instructions listed above
      */
-    public SimpleMatrix applyVector(SimpleMatrix input1, SimpleMatrix input2){
+    public SimpleMatrix applyVectorAddition(SimpleMatrix input1, SimpleMatrix input2){
         SimpleMatrix inp1 = input1.copy();
         SimpleMatrix inp2 = input2.copy();
         if (inp2.numCols() == 1){
@@ -44,6 +44,27 @@ public class ApplySpecial extends ApplyToMatrix{
             for (int i = 0; i < inp1.numRows(); i ++){
                 for (int j = 0; j < inp1.numCols(); j ++){
                     inp1.set(i,j,inp1.get(i,j) + inp2.get(0,j));
+                }
+            }
+        }
+        return inp1;
+    }
+
+    public SimpleMatrix applyVectorMultiplication(SimpleMatrix input1, SimpleMatrix input2){
+        SimpleMatrix inp1 = input1.copy();
+        SimpleMatrix inp2 = input2.copy();
+        if (inp2.numCols() == 1){
+            applyFunction(input1);
+            for (int i = 0; i < inp1.numRows(); i ++){
+                for (int j = 0; j < inp1.numCols(); j ++){
+                    inp1.set(i,j,inp1.get(i,j)*inp2.get(i,0));
+                }
+            }
+        }
+        else if (inp2.numRows() == 1){
+            for (int i = 0; i < inp1.numRows(); i ++){
+                for (int j = 0; j < inp1.numCols(); j ++){
+                    inp1.set(i,j,inp1.get(i,j)*inp2.get(0,j));
                 }
             }
         }

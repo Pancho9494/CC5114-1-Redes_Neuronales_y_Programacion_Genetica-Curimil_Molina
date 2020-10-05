@@ -1,6 +1,5 @@
 package test;
 
-import exceptions.WrongVectorSizeException;
 import neurons.NeuralNetwork;
 import operations.ApplyActivation;
 import operations.ApplySigmoid;
@@ -9,6 +8,8 @@ import operations.ApplyTanh;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -126,7 +127,7 @@ public class NeuralNetworkTest {
     }
 
     @Test
-    public void modelPredictTest(){
+    public void modelPredictTest() throws FileNotFoundException {
         int nIterations = 10000;
         double learningRate = 0.01;
 
@@ -141,34 +142,13 @@ public class NeuralNetworkTest {
         // Train the model
         NN.model(X,Y,nIterations,learningRate);
 
-        // Testing Data
-        SimpleMatrix m00 = new SimpleMatrix(2,1);
-        m00.setRow(0,0,0);
-        m00.setRow(1,0,0);
-
-
-        SimpleMatrix m01 = new SimpleMatrix(2,1);
-        m01.setRow(0,0,0);
-        m01.setRow(1,0,1);
-
-        SimpleMatrix m10 = new SimpleMatrix(2,1);
-        m10.setRow(0,0,1);
-        m10.setRow(1,0,0);
-
-        SimpleMatrix m11 = new SimpleMatrix(2,1);
-        m11.setRow(0,0,1);
-        m11.setRow(1,0,1);
-
         // Make predictions
-        SimpleMatrix predictions00 = NN.predict(m00);
-        SimpleMatrix predictions01 = NN.predict(m01);
-        SimpleMatrix predictions10 = NN.predict(m10);
-        SimpleMatrix predictions11 = NN.predict(m11);
+        SimpleMatrix predictions00 = NN.predict(X);
 
         assertEquals(0.0,predictions00.get(0,0));
-        assertEquals(1.0,predictions01.get(0,0));
-        assertEquals(1.0,predictions10.get(0,0));
-        assertEquals(0.0,predictions11.get(0,0));
+        assertEquals(1.0,predictions00.get(0,0));
+        assertEquals(1.0,predictions00.get(0,0));
+        assertEquals(0.0,predictions00.get(0,0));
     }
 
     @Test
@@ -215,14 +195,14 @@ public class NeuralNetworkTest {
         b.setRow(1,0,4);
 
         SimpleMatrix testApplyVectorHorizontal = test.copy();
-        testApplyVectorHorizontal = special.applyVector(testApplyVectorHorizontal,a);
+        testApplyVectorHorizontal = special.applyVectorAddition(testApplyVectorHorizontal,a);
         assertEquals(2.1,testApplyVectorHorizontal.get(0,0));
         assertEquals(0.6,testApplyVectorHorizontal.get(0,1));
         assertEquals(2.8,testApplyVectorHorizontal.get(1,0));
         assertEquals(0.3,testApplyVectorHorizontal.get(1,1));
 
         SimpleMatrix testApplyVectorVertical = test.copy();
-        testApplyVectorVertical = special.applyVector(testApplyVectorVertical,b);
+        testApplyVectorVertical = special.applyVectorAddition(testApplyVectorVertical,b);
         assertEquals(0.1,testApplyVectorVertical.get(0,0));
         assertEquals(0.6,testApplyVectorVertical.get(0,1));
         assertEquals(4.8,testApplyVectorVertical.get(1,0));
@@ -247,6 +227,43 @@ public class NeuralNetworkTest {
         testSum1 = special.meanAlongRows(testSum1,1,1);
         assertEquals(0.7,Math.floor(testSum1.get(0,0)*10000)/10000);
         assertEquals(1.1,Math.floor(testSum1.get(1,0)*10000)/10000);
+    }
 
+    @Test
+    public void specialTest(){
+        ApplySpecial applyVec = new ApplySpecial();
+        SimpleMatrix x1 = new SimpleMatrix(3,3);
+        x1.setRow(0,0,0,1,2);
+        x1.setRow(1,0,3,4,5);
+        x1.setRow(2,0,6,7,8);
+
+        SimpleMatrix x2 = new SimpleMatrix(1,3);
+        x2.setRow(0,0,0,1,2);
+
+        SimpleMatrix result = applyVec.applyVectorMultiplication(x1,x2);
+        assertEquals(0.0,result.get(0,0));
+        assertEquals(1.0,result.get(0,1));
+        assertEquals(4.0,result.get(0,2));
+        assertEquals(0.0,result.get(1,0));
+        assertEquals(4.0,result.get(1,1));
+        assertEquals(10.0,result.get(1,2));
+        assertEquals(0.0,result.get(2,0));
+        assertEquals(7.0,result.get(2,1));
+        assertEquals(16.0,result.get(2,2));
+
+        SimpleMatrix x3 = new SimpleMatrix(3,1);
+        x3.setRow(0,0,0);
+        x3.setRow(1,0,1);
+        x3.setRow(2,0,2);
+        SimpleMatrix result2 = applyVec.applyVectorMultiplication(x1,x3);
+        assertEquals(0.0,result2.get(0,0));
+        assertEquals(0.0,result2.get(0,1));
+        assertEquals(0.0,result2.get(0,2));
+        assertEquals(3.0,result2.get(1,0));
+        assertEquals(4.0,result2.get(1,1));
+        assertEquals(5.0,result2.get(1,2));
+        assertEquals(12.0,result2.get(2,0));
+        assertEquals(14.0,result2.get(2,1));
+        assertEquals(16.0,result2.get(2,2));
     }
 }
