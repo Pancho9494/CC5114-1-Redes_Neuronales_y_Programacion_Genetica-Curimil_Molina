@@ -1,10 +1,7 @@
 package test;
 
 import neurons.NeuralNetwork;
-import operations.ApplyActivation;
-import operations.ApplySigmoid;
-import operations.ApplySpecial;
-import operations.ApplyTanh;
+import operations.*;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +9,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class NeuralNetworkTest {
     NeuralNetwork NN = new NeuralNetwork();
@@ -144,6 +142,7 @@ public class NeuralNetworkTest {
 
         // Make predictions
         SimpleMatrix predictions00 = NN.predict(X);
+        String conf = NN.ConfusionMatrix(predictions00,Y);
 
         assertEquals(0.0,predictions00.get(0,0));
         assertEquals(1.0,predictions00.get(0,0));
@@ -151,12 +150,16 @@ public class NeuralNetworkTest {
         assertEquals(0.0,predictions00.get(0,0));
     }
 
+    /**
+     * Apply sigmoid function
+     * Apply hyperbolic tangent
+     * Apply activation function
+     */
     @Test
     public void applyOperationsTest(){
         ApplySigmoid sigmoid = new ApplySigmoid();
         ApplyTanh tanh = new ApplyTanh();
         ApplyActivation act = new ApplyActivation();
-        ApplySpecial special = new ApplySpecial();
 
         SimpleMatrix test = new SimpleMatrix(2,2);
         test.setRow(0,0,0.1,0.6);
@@ -185,8 +188,18 @@ public class NeuralNetworkTest {
         assertEquals(1.0,Math.floor(testAct.get(0,1)*10000)/10000);
         assertEquals(1.0,Math.floor(testAct.get(1,0)*10000)/10000);
         assertEquals(0.0,Math.floor(testAct.get(1,1)*10000)/10000);
+    }
 
-        // Apply special functions
+    /**
+     * Apply Vector Addition
+     */
+    @Test
+    public void applyVectorAdition(){
+        ApplySpecial special = new ApplySpecial();
+        SimpleMatrix test = new SimpleMatrix(2,2);
+        test.setRow(0,0,0.1,0.6);
+        test.setRow(1,0,0.8,0.3);
+
         SimpleMatrix a = new SimpleMatrix(1,2);
         a.setRow(0,0,2,0);
 
@@ -229,8 +242,11 @@ public class NeuralNetworkTest {
         assertEquals(1.1,Math.floor(testSum1.get(1,0)*10000)/10000);
     }
 
+    /**
+     * Apply VectorMultiplication
+     */
     @Test
-    public void specialTest(){
+    public void applyVectorMultiplication(){
         ApplySpecial applyVec = new ApplySpecial();
         SimpleMatrix x1 = new SimpleMatrix(3,3);
         x1.setRow(0,0,0,1,2);
@@ -265,5 +281,35 @@ public class NeuralNetworkTest {
         assertEquals(12.0,result2.get(2,0));
         assertEquals(14.0,result2.get(2,1));
         assertEquals(16.0,result2.get(2,2));
+    }
+
+    /**
+     * Apply One Hot Encoding
+     * Apply Normalization
+     */
+    @Test
+    public void applyMoreOperationsTest(){
+        SimpleMatrix a = new SimpleMatrix(1,4);
+        a.setRow(0,0,0.4,0.5,0.9,0.8);
+
+        ApplyOneHot oneHot = new ApplyOneHot(a);
+        SimpleMatrix aEncoded = oneHot.applyFunction(a);
+        assertEquals(0.0,aEncoded.get(0,0));
+        assertEquals(0.0,aEncoded.get(0,1));
+        assertEquals(1.0,aEncoded.get(0,2));
+        assertEquals(0.0,aEncoded.get(0,3));
+
+        SimpleMatrix b = new SimpleMatrix(3,3);
+        b.setRow(0,0,39,124,46);
+        b.setRow(1,0,45,13,75);
+        b.setRow(2,0,69,87,15);
+
+        ApplyNormalization norm = new ApplyNormalization(b,0,1);
+        SimpleMatrix bNormal = norm.applyFunction(b);
+        for (int i = 0; i < b.numRows(); i ++){
+            for (int j = 0; j < b.numCols(); j ++){
+                assertTrue(bNormal.get(i,j) >= 0 && bNormal.get(i,j) <= 1);
+            }
+        }
     }
 }

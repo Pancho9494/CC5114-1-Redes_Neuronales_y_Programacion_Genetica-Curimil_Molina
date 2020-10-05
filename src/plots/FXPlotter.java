@@ -15,21 +15,23 @@ import org.ejml.simple.SimpleMatrix;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class FXPlotter extends Application {
-    ArrayList<Double> xData = new ArrayList<>();
-    ArrayList<Double> yData = new ArrayList<>();
-//    SpaceClassifier classifier = new SpaceClassifier();
+public abstract class FXPlotter extends Application {
     NeuralNetwork NN = new NeuralNetwork();
     SimpleMatrix training;
     SimpleMatrix trainingLabels;
     ArrayList<Double> lossData = new ArrayList<>();
     int iterations;
+//    ArrayList<Double> xData = new ArrayList<>();
+//    ArrayList<Double> yData = new ArrayList<>();
+//    SpaceClassifier classifier = new SpaceClassifier();
 
+    protected abstract void init(Stage stage);
 
     @Override
     public void start(Stage stage) throws Exception {
         setUpData();
         this.iterations = 10000;
+        NN.setNumberOfLayers(2,4,1);
         NN.model(training,trainingLabels,iterations,0.01);
         lossData = NN.getTrainingCost();
         init(stage);
@@ -50,72 +52,50 @@ public class FXPlotter extends Application {
     }
 
 
-    private void init(Stage stage){
-        StackPane root = new StackPane();
-        int width = 1280;
-        int height = 720;
-        Scene scene = new Scene(root, width, height);
-
-        // Set axis
-        final NumberAxis xAxis = new NumberAxis(0,iterations,1);
-        xAxis.setLabel("Epoch");
-        int minY = lossData.indexOf(Collections.min(lossData));
-        int maxY = lossData.indexOf(Collections.max(lossData));
-        final NumberAxis yAxis = new NumberAxis(minY,maxY,0.1);
-        yAxis.setLabel("Loss");
-
-        // Set graph points (base chart)
-        ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
-        scatterChart.setLegendVisible(false);
-        scatterChart.setAnimated(false);
-        XYChart.Series<Number, Number> redData = new XYChart.Series<>();
-        XYChart.Series<Number, Number> blueData = new XYChart.Series<>();
-        for (int pointer: classifier.range(xData.size())){
-            double xPoint = xData.get(pointer);
-            double yPoint = yData.get(pointer);
-            if (classifier.compute(xPoint,yPoint) == -1.0){
-                redData.getData().add(new XYChart.Data<Number, Number>(xPoint, yPoint));
-            }
-            else{
-                blueData.getData().add(new XYChart.Data<Number, Number>(xPoint, yPoint));
-            }
-        }
 
 
-        // Set line plot
-        XYChart.Series line = new XYChart.Series();
-        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
-        line.getData().add(new XYChart.Data(-27, classifier.function(-27)));
-        line.getData().add(new XYChart.Data(27, classifier.function(27)));
-
-        // Make background invisible
-        lineChart.setLegendVisible(false);
-        lineChart.setAnimated(false);
-        lineChart.setCreateSymbols(true);
-        lineChart.setAlternativeRowFillVisible(false);
-        lineChart.setAlternativeColumnFillVisible(false);
-        lineChart.setHorizontalGridLinesVisible(false);
-        lineChart.setVerticalGridLinesVisible(false);
-        lineChart.getXAxis().setVisible(false);
-        lineChart.getYAxis().setVisible(false);
-        Object a = getClass().getResource("plots/chart.css").toExternalForm();
-        lineChart.getStylesheets().addAll((String) a);
 
 
-        // Chart size
-        scatterChart.setPrefSize(width, height);
-        lineChart.setPrefSize(width,height);
+//        // Set graph points (base chart)
+//        ScatterChart<Number, Number> scatterChart = new ScatterChart<>(xAxis, yAxis);
+//        scatterChart.setLegendVisible(false);
+//        scatterChart.setAnimated(false);
+//        XYChart.Series<Number, Number> redData = new XYChart.Series<>();
+//        XYChart.Series<Number, Number> blueData = new XYChart.Series<>();
+//        for (int pointer: classifier.range(xData.size())){
+//            double xPoint = xData.get(pointer);
+//            double yPoint = yData.get(pointer);
+//            if (classifier.compute(xPoint,yPoint) == -1.0){
+//                redData.getData().add(new XYChart.Data<Number, Number>(xPoint, yPoint));
+//            }
+//            else{
+//                blueData.getData().add(new XYChart.Data<Number, Number>(xPoint, yPoint));
+//            }
+//        }
 
-        // Add data
-        scatterChart.getData().add(redData);
-        scatterChart.getData().add(blueData);
-        lineChart.getData().add(line);
+//        line.getData().add(new XYChart.Data(-27, classifier.function(-27)));
+//        line.getData().add(new XYChart.Data(27, classifier.function(27)));
 
-        // Add charts to root
-        root.getChildren().addAll(scatterChart, lineChart);
+//        // Make background invisible
+//        lineChart.setLegendVisible(false);
+//        lineChart.setAnimated(false);
+//        lineChart.setCreateSymbols(true);
+//        lineChart.setAlternativeRowFillVisible(false);
+//        lineChart.setAlternativeColumnFillVisible(false);
+//        lineChart.setHorizontalGridLinesVisible(false);
+//        lineChart.setVerticalGridLinesVisible(false);
+//        lineChart.getXAxis().setVisible(false);
+//        lineChart.getYAxis().setVisible(false);
+//        Object a = getClass().getResource("plots/chart.css").toExternalForm();
+//        lineChart.getStylesheets().addAll((String) a);
 
-        stage.setScene(scene);
-        stage.setTitle("2D Plotter");
-        stage.show();
-    }
+
+
+//        scatterChart.setPrefSize(width, height);
+
+
+
+//        scatterChart.getData().add(redData);
+//        scatterChart.getData().add(blueData);
+
 }

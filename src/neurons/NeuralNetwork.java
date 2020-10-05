@@ -5,6 +5,7 @@ import operations.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import org.ejml.simple.*;
 
@@ -25,6 +26,7 @@ public class NeuralNetwork {
     private ArrayList<SimpleMatrix> activationValues = new ArrayList<>();
     private ArrayList<SimpleMatrix> gradients = new ArrayList<>();
     private ArrayList<Double> trainingCost = new ArrayList<>();
+    private ArrayList<Integer> confusionData = new ArrayList<>();
 
 
     /**
@@ -155,17 +157,15 @@ public class NeuralNetwork {
 //    w2.setRow(0,0,-0.4694743859349521,0.5425600435859647,-0.46341769281246226,-0.46572975357025687);
     public void model(SimpleMatrix input, SimpleMatrix actualOutput, int n_iterations, double learningRate) throws FileNotFoundException {
         initializeParameters(nFirst,nHidden,nOut);
-        this.w1 = new SimpleMatrix(4,2);
-        w1.setRow(0,0,0.4967141530112327,-0.13826430117118466);
-        w1.setRow(1,0,0.6476885381006925,1.5230298564080254);
-        w1.setRow(2,0,-0.23415337472333597,-0.23413695694918055);
-        w1.setRow(3,0,1.5792128155073915,0.7674347291529088);
-        this.w2 =  new SimpleMatrix(1,4);
-        w2.setRow(0,0,-0.4694743859349521,0.5425600435859647,-0.46341769281246226,-0.46572975357025687);
+        int k = 0;
         for (int i = 0; i < n_iterations; i++){
             SimpleMatrix A2 = forwardsPropagation(input);
+            // Confusion Matrix Data
+            ApplyOneHot oneHot = new ApplyOneHot(A2);
+
             double cost = calculateCost(A2,actualOutput);
             trainingCost.add(cost);
+
             backwardsPropagation(input,actualOutput);
             updateParameters(learningRate);
         }
@@ -177,6 +177,35 @@ public class NeuralNetwork {
         return activation.applyFunction(A2);
     }
 
+    public String ConfusionMatrix(SimpleMatrix predictions, SimpleMatrix actualOutput){
+        int TP = 0;
+        int TN = 0;
+        int FP = 0;
+        int FN = 0;
+        for (int i = 0; i < predictions.numCols(); i++){
+            if (predictions.get(0,i) == 0){
+                if (actualOutput.get(0,i) == 0){
+                    TN++;
+                }
+                else{
+                    FN++;
+                }
+            }
+            else if (predictions.get(0,i) == 1){
+                if (actualOutput.get(0,i) == 0){
+                    FP++;
+                }
+                else{
+                    TP++;
+                }
+            }
+        }
+        String output = String.format("      P   |   N\n" +
+                        "P  TP = %d| FP = %d\n" +
+                        "N  FN = %d| TN = %d",
+                        TP, FP, FN, TN);
+        return output;
+    }
 
     // Getters and Setters
 
@@ -226,5 +255,11 @@ public class NeuralNetwork {
 
     public void setRandomSeed(int randomSeed) {
         this.randomSeed = randomSeed;
+    }
+
+    public void setNumberOfLayers(int nFirst, int nHidden, int nOut){
+        this.nFirst = nFirst;
+        this.nHidden = nHidden;
+        this.nOut = nOut;
     }
 }

@@ -13,16 +13,16 @@ public class PerceptronTest {
     @Test
     public void ANDTest(){
         PT.AND();
-        TestCase.assertEquals(0.0,PT.compute(0,0));
-        TestCase.assertEquals(0.0,PT.compute(0,1));
-        TestCase.assertEquals(0.0,PT.compute(1,0));
+        TestCase.assertEquals(-1.0,PT.compute(0,0));
+        TestCase.assertEquals(-1.0,PT.compute(0,1));
+        TestCase.assertEquals(-1.0,PT.compute(1,0));
         TestCase.assertEquals(1.0,PT.compute(1,1));
     }
 
     @Test
     public void ORTest(){
         PT.OR();
-        TestCase.assertEquals(0.0,PT.compute(0,0));
+        TestCase.assertEquals(-1.0,PT.compute(0,0));
         TestCase.assertEquals(1.0,PT.compute(0,1));
         TestCase.assertEquals(1.0,PT.compute(1,0));
         TestCase.assertEquals(1.0,PT.compute(1,1));
@@ -34,19 +34,19 @@ public class PerceptronTest {
         TestCase.assertEquals(1.0,PT.compute(0,0));
         TestCase.assertEquals(1.0,PT.compute(0,1));
         TestCase.assertEquals(1.0,PT.compute(1,0));
-        TestCase.assertEquals(0.0,PT.compute(1,1));
+        TestCase.assertEquals(-1.0,PT.compute(1,1));
     }
 
     @Test
     public void BinaryAddTest(){
-        TestCase.assertEquals(0.0,BA.sum(0,0));
+        TestCase.assertEquals(-1.0,BA.sum(0,0));
         TestCase.assertEquals(1.0,BA.sum(0,1));
         TestCase.assertEquals(1.0,BA.sum(1,0));
-        TestCase.assertEquals(0.0,BA.sum(1,1));
+        TestCase.assertEquals(-1.0,BA.sum(1,1));
 
-        TestCase.assertEquals(0.0,BA.cOut(0,0));
-        TestCase.assertEquals(0.0,BA.cOut(0,1));
-        TestCase.assertEquals(0.0,BA.cOut(1,0));
+        TestCase.assertEquals(-1.0,BA.cOut(0,0));
+        TestCase.assertEquals(-1.0,BA.cOut(0,1));
+        TestCase.assertEquals(-1.0,BA.cOut(1,0));
         TestCase.assertEquals(1.0,BA.cOut(1,1));
 
     }
