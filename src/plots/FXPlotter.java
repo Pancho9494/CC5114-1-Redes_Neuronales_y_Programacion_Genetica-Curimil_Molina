@@ -13,6 +13,7 @@ import operations.SpaceClassifier;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class FXPlotter extends Application {
     ArrayList<Double> xData = new ArrayList<>();
@@ -30,7 +31,7 @@ public class FXPlotter extends Application {
         setUpData();
         this.iterations = 10000;
         NN.model(training,trainingLabels,iterations,0.01);
-
+        lossData = NN.getTrainingCost();
         init(stage);
 //        classifier.train(0.1,1540);
 //        classifier.generateTestPoints(1400);
@@ -58,7 +59,9 @@ public class FXPlotter extends Application {
         // Set axis
         final NumberAxis xAxis = new NumberAxis(0,iterations,1);
         xAxis.setLabel("Epoch");
-        final NumberAxis yAxis = new NumberAxis(-26,26,1);
+        int minY = lossData.indexOf(Collections.min(lossData));
+        int maxY = lossData.indexOf(Collections.max(lossData));
+        final NumberAxis yAxis = new NumberAxis(minY,maxY,0.1);
         yAxis.setLabel("Loss");
 
         // Set graph points (base chart)
