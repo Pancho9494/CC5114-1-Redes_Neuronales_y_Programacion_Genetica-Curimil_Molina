@@ -2,15 +2,13 @@ package test;
 
 import exceptions.WrongVectorSizeException;
 import neurons.NeuralNetwork;
+import operations.ApplyActivation;
+import operations.ApplySigmoid;
 import operations.ApplySpecial;
-import operations.MatrixOperator;
+import operations.ApplyTanh;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -18,9 +16,7 @@ public class NeuralNetworkTest {
     NeuralNetwork NN = new NeuralNetwork();
     SimpleMatrix X = new SimpleMatrix(2,4);
     SimpleMatrix Y = new SimpleMatrix(1,4);
-    MatrixOperator MO = new MatrixOperator(42);
     SimpleMatrix A;
-//    ArrayList<ArrayList<Double>> A = new ArrayList();
 
 
 
@@ -57,13 +53,13 @@ public class NeuralNetworkTest {
         input.setRow(0,0,0,0,1,1);
         input.setRow(1,0,0,1,0,1);
 
-        SimpleMatrix A2 = NN.forwardPropagation(input);
+        SimpleMatrix A2 = NN.forwardsPropagation(input);
         assertEquals(1,A2.numRows());
         assertEquals(4,A2.numCols());
     }
 
     @Test
-    public void calculateCostTest() throws WrongVectorSizeException {
+    public void calculateCostTest() {
         A = new SimpleMatrix(2,3);
         A.setRow(0,0,1.0,2.0,3.0);
         A.setRow(1,0,4.0,5.0,6.0);
@@ -80,7 +76,7 @@ public class NeuralNetworkTest {
 
     @Test
     public void backPropagationTest(){
-        NN.forwardPropagation(X);
+        NN.forwardsPropagation(X);
         assertEquals(4,NN.getActivationValues().get(0).numRows());
         assertEquals(4,NN.getActivationValues().get(0).numCols());
 
@@ -105,7 +101,7 @@ public class NeuralNetworkTest {
     public void updateParametersTest(){
         double learningRate = 0.01;
 
-        NN.forwardPropagation(X);
+        NN.forwardsPropagation(X);
         NN.backwardsPropagation(X,Y);
 
         // Expected Values
@@ -133,6 +129,8 @@ public class NeuralNetworkTest {
     public void modelPredictTest(){
         int nIterations = 10000;
         double learningRate = 0.01;
+
+        // Training Data
         SimpleMatrix X = new SimpleMatrix(2,4);
         X.setRow(0,0,0,0,1,1);
         X.setRow(1,0,0,1,0,1);
@@ -140,130 +138,115 @@ public class NeuralNetworkTest {
         SimpleMatrix Y = new SimpleMatrix(1,4);
         Y.setRow(0,0,0,1,1,0);
 
+        // Train the model
         NN.model(X,Y,nIterations,learningRate);
-        SimpleMatrix predictions = NN.predict(X);
 
-        assertEquals(0.0,predictions.get(0,0));
-        assertEquals(1.0,predictions.get(0,1));
-        assertEquals(1.0,predictions.get(1,0));
-        assertEquals(0.0,predictions.get(1,1));
+        // Testing Data
+        SimpleMatrix m00 = new SimpleMatrix(2,1);
+        m00.setRow(0,0,0);
+        m00.setRow(1,0,0);
+
+
+        SimpleMatrix m01 = new SimpleMatrix(2,1);
+        m01.setRow(0,0,0);
+        m01.setRow(1,0,1);
+
+        SimpleMatrix m10 = new SimpleMatrix(2,1);
+        m10.setRow(0,0,1);
+        m10.setRow(1,0,0);
+
+        SimpleMatrix m11 = new SimpleMatrix(2,1);
+        m11.setRow(0,0,1);
+        m11.setRow(1,0,1);
+
+        // Make predictions
+        SimpleMatrix predictions00 = NN.predict(m00);
+        SimpleMatrix predictions01 = NN.predict(m01);
+        SimpleMatrix predictions10 = NN.predict(m10);
+        SimpleMatrix predictions11 = NN.predict(m11);
+
+        assertEquals(0.0,predictions00.get(0,0));
+        assertEquals(1.0,predictions01.get(0,0));
+        assertEquals(1.0,predictions10.get(0,0));
+        assertEquals(0.0,predictions11.get(0,0));
     }
 
-//    @Test
-//    public void transposeTest(){
-//        ArrayList<ArrayList<Double>> transposed = MO.transpose(A);
-//
-//        assertEquals(3,transposed.size());
-//        assertEquals(2,transposed.get(0).size());
-//
-//        assertEquals(1.0,transposed.get(0).get(0));
-//        assertEquals(4.0,transposed.get(0).get(1));
-//
-//        assertEquals(2.0,transposed.get(1).get(0));
-//        assertEquals(5.0,transposed.get(1).get(1));
-//
-//        assertEquals(3.0,transposed.get(2).get(0));
-//        assertEquals(6.0,transposed.get(2).get(1));
-//    }
+    @Test
+    public void applyOperationsTest(){
+        ApplySigmoid sigmoid = new ApplySigmoid();
+        ApplyTanh tanh = new ApplyTanh();
+        ApplyActivation act = new ApplyActivation();
+        ApplySpecial special = new ApplySpecial();
 
+        SimpleMatrix test = new SimpleMatrix(2,2);
+        test.setRow(0,0,0.1,0.6);
+        test.setRow(1,0,0.8,0.3);
 
-//    @Test
-//    public void matrixMultiplicationTest() throws WrongVectorSizeException {
-//        ArrayList<ArrayList<Double>> B = new ArrayList();
-//        ArrayList<Double> Brow1 = new ArrayList<>(Arrays.asList(1.0,2.0));
-//        ArrayList<Double> Brow2 = new ArrayList<>(Arrays.asList(3.0,4.0));
-//        ArrayList<Double> Brow3 = new ArrayList<>(Arrays.asList(5.0,6.0));
-//        B.add(Brow1);
-//        B.add(Brow2);
-//        B.add(Brow3);
-//
-//        ArrayList<ArrayList<Double>> result = MO.matrixMultiplication(A,B);
-//
-//        assertEquals(2,result.size());
-//        assertEquals(2,result.get(0).size());
-//
-//        assertEquals(22.0,result.get(0).get(0));
-//        assertEquals(28.0,result.get(0).get(1));
-//        assertEquals(49.0,result.get(1).get(0));
-//        assertEquals(64.0,result.get(1).get(1));
-//    }
+        // Apply sigmoid
+        SimpleMatrix testSigmoid = test.copy();
+        testSigmoid = sigmoid.applyFunction(testSigmoid);
+        assertEquals(0.5249,Math.floor(testSigmoid.get(0,0)*10000)/10000);
+        assertEquals(0.6456,Math.floor(testSigmoid.get(0,1)*10000)/10000);
+        assertEquals(0.6899,Math.floor(testSigmoid.get(1,0)*10000)/10000);
+        assertEquals(0.5744,Math.floor(testSigmoid.get(1,1)*10000)/10000);
 
-//    @Test
-//    public void matrixAdditionTest(){
-//        ArrayList<ArrayList<Double>> A = new ArrayList();
-//        ArrayList<Double> Arow1 = new ArrayList<>(Arrays.asList(1.0,2.0));
-//        ArrayList<Double> Arow2 = new ArrayList<>(Arrays.asList(3.0,4.0));
-//        A.add(Arow1);
-//        A.add(Arow2);
-//
-//        ArrayList<ArrayList<Double>> column = new ArrayList();
-//        ArrayList<Double> columnRow1 = new ArrayList<>(Arrays.asList(1.0));
-//        ArrayList<Double> columnRow2 = new ArrayList<>(Arrays.asList(3.0));
-//        column.add(columnRow1);
-//        column.add(columnRow2);
-//
-//        ArrayList<ArrayList<Double>> row = new ArrayList();
-//        ArrayList<Double> rowRow1 = new ArrayList<>(Arrays.asList(1.0,3.0));
-//        row.add(rowRow1);
-//
-//        ArrayList<ArrayList<Double>> addColumn = MO.matrixAddition(A,column,1);
-//        assertEquals(2,addColumn.size());
-//        assertEquals(2,addColumn.get(0).size());
-//        assertEquals(2.0,addColumn.get(0).get(0));
-//        assertEquals(3.0,addColumn.get(0).get(1));
-//        assertEquals(6.0,addColumn.get(1).get(0));
-//        assertEquals(7.0,addColumn.get(1).get(1));
-//
-//        ArrayList<ArrayList<Double>> addRow = MO.matrixAddition(A,row,1);
-//        assertEquals(2,addRow.size());
-//        assertEquals(2,addRow.get(0).size());
-//        assertEquals(2.0,addRow.get(0).get(0));
-//        assertEquals(5.0,addRow.get(0).get(1));
-//        assertEquals(4.0,addRow.get(1).get(0));
-//        assertEquals(7.0,addRow.get(1).get(1));
-//
-//        ArrayList<ArrayList<Double>> addMatrix = MO.matrixAddition(A,A,1);
-//        assertEquals(2,addMatrix.size());
-//        assertEquals(2,addMatrix.get(0).size());
-//        assertEquals(2.0,addMatrix.get(0).get(0));
-//        assertEquals(4.0,addMatrix.get(0).get(1));
-//        assertEquals(6.0,addMatrix.get(1).get(0));
-//        assertEquals(8.0,addMatrix.get(1).get(1));
-//    }
+        // Apply hyperbolic tangent
+        SimpleMatrix testTanh = test.copy();
+        testTanh = tanh.applyFunction(testTanh);
+        assertEquals(0.0996,Math.floor(testTanh.get(0,0)*10000)/10000);
+        assertEquals(0.5370,Math.floor(testTanh.get(0,1)*10000)/10000);
+        assertEquals(0.6640,Math.floor(testTanh.get(1,0)*10000)/10000);
+        assertEquals(0.2913,Math.floor(testTanh.get(1,1)*10000)/10000);
 
-//    @Test
-//    public void mapFunctionTest(){
-//        ArrayList<ArrayList<Double>> tanh = MO.mapTanhInMatrix(A);
-//        assertEquals(0.7615,tanh.get(0).get(0));
-//        assertEquals(0.9640,tanh.get(0).get(1));
-//        assertEquals(0.9993,tanh.get(1).get(0));
-//        assertEquals(0.9999,tanh.get(1).get(1));
-//    }
+        // Apply activation function
+        SimpleMatrix testAct = test.copy();
+        testAct = act.applyFunction(testAct);
+        assertEquals(0.0,Math.floor(testAct.get(0,0)*10000)/10000);
+        assertEquals(1.0,Math.floor(testAct.get(0,1)*10000)/10000);
+        assertEquals(1.0,Math.floor(testAct.get(1,0)*10000)/10000);
+        assertEquals(0.0,Math.floor(testAct.get(1,1)*10000)/10000);
 
+        // Apply special functions
+        SimpleMatrix a = new SimpleMatrix(1,2);
+        a.setRow(0,0,2,0);
 
-//    @Test
-//    public void meanAlongRowsTest(){
-//        ArrayList<ArrayList<Double>> meanRows = MO.meanAlongRows(A,A.get(0).size());
-//        assertEquals(2,meanRows.size());
-//        assertEquals(1,meanRows.get(0).size());
-//        assertEquals(6.0/3,meanRows.get(0).get(0));
-//        assertEquals(15.0/3,meanRows.get(1).get(0));
-//
-//        ArrayList<ArrayList<Double>> sumRows = MO.meanAlongRows(A,1);
-//        assertEquals(2,sumRows.size());
-//        assertEquals(1,sumRows.get(0).size());
-//        assertEquals(6.0,sumRows.get(0).get(0));
-//        assertEquals(15.0,sumRows.get(1).get(0));
-//    }
+        SimpleMatrix b = new SimpleMatrix(2,1);
+        b.setRow(0,0,0);
+        b.setRow(1,0,4);
 
-//    @Test
-//    public void sumVectorTest(){
-//        ArrayList<ArrayList<Double>> meanRows = MO.meanAlongRows(A,A.get(0).size());
-//        double value = MO.sumVector(meanRows);
-//        assertEquals(7.0,value);
-//    }
+        SimpleMatrix testApplyVectorHorizontal = test.copy();
+        testApplyVectorHorizontal = special.applyVector(testApplyVectorHorizontal,a);
+        assertEquals(2.1,testApplyVectorHorizontal.get(0,0));
+        assertEquals(0.6,testApplyVectorHorizontal.get(0,1));
+        assertEquals(2.8,testApplyVectorHorizontal.get(1,0));
+        assertEquals(0.3,testApplyVectorHorizontal.get(1,1));
 
+        SimpleMatrix testApplyVectorVertical = test.copy();
+        testApplyVectorVertical = special.applyVector(testApplyVectorVertical,b);
+        assertEquals(0.1,testApplyVectorVertical.get(0,0));
+        assertEquals(0.6,testApplyVectorVertical.get(0,1));
+        assertEquals(4.8,testApplyVectorVertical.get(1,0));
+        assertEquals(4.3,testApplyVectorVertical.get(1,1));
 
+        SimpleMatrix testMeanAx0 = test.copy();
+        testMeanAx0 = special.meanAlongRows(testMeanAx0,0,0);
+        assertEquals(0.45,Math.floor(testMeanAx0.get(0,0)*10000)/10000);
+        assertEquals(0.45,Math.floor(testMeanAx0.get(0,1)*10000)/10000);
 
+        SimpleMatrix testMeanAx1 = test.copy();
+        testMeanAx1 = special.meanAlongRows(testMeanAx1,1,0);
+        assertEquals(0.35,Math.floor(testMeanAx1.get(0,0)*10000)/10000);
+        assertEquals(0.55,Math.floor(testMeanAx1.get(1,0)*10000)/10000);
 
+        SimpleMatrix testSum0 = test.copy();
+        testSum0 = special.meanAlongRows(testSum0,0,1);
+        assertEquals(0.9,Math.floor(testSum0.get(0,0)*10000)/10000);
+        assertEquals(0.9,Math.floor(testSum0.get(0,1)*10000)/10000);
+
+        SimpleMatrix testSum1 = test.copy();
+        testSum1 = special.meanAlongRows(testSum1,1,1);
+        assertEquals(0.7,Math.floor(testSum1.get(0,0)*10000)/10000);
+        assertEquals(1.1,Math.floor(testSum1.get(1,0)*10000)/10000);
+
+    }
 }

@@ -18,7 +18,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" exported="" name="ejml" level="application" />
-    <orderEntry type="library" name="org.ejml:ejml-all:0.39" level="project" />
     <orderEntry type="module-library">
       <library name="JUnit5.4">
         <CLASSES>
@@ -35,5 +34,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.ejml:ejml-all:0.39" level="application" />
   </component>
 </module>

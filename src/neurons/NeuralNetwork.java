@@ -24,6 +24,13 @@ public class NeuralNetwork {
     private ArrayList<SimpleMatrix> gradients = new ArrayList<>();
 
 
+    /**
+     * Sets the initial parameters of the neural network (random weights and zero bias)
+     * It also clears the activationValues and gradients ArrayLists
+     * @param nFirst    number of neurons in first layer
+     * @param nHidden   number of neurons in hidden layer
+     * @param nOut      number of neurons in output layer
+     */
     public void initializeParameters(int nFirst, int nHidden, int nOut){
         this.nFirst = nFirst;
         this.nHidden = nHidden;
@@ -41,7 +48,7 @@ public class NeuralNetwork {
      * @param input Input vector represented as ArrayList<ArrayList<Double>>
      * @return output vector represented as ArrayList<ArrayList<Double>>
      */
-    public SimpleMatrix forwardPropagation(SimpleMatrix input) {
+    public SimpleMatrix forwardsPropagation(SimpleMatrix input) {
         ApplyTanh tanh = new ApplyTanh();
         ApplySigmoid sigmoid = new ApplySigmoid();
         ApplySpecial addVector = new ApplySpecial();
@@ -73,11 +80,18 @@ public class NeuralNetwork {
     public double calculateCost(SimpleMatrix NNOutput, SimpleMatrix actualOutput) {
         ApplySpecial meanAlongRows = new ApplySpecial();
         SimpleMatrix one = NNOutput.plus(-1,actualOutput).elementPower(2).scale(0.5); // 0.5*(A2 - y) ** 2
-        SimpleMatrix two = meanAlongRows.meanAlongRows(one,0,0); // (0.5*(A2 - y) ** 2).mean(axis=1)
+        SimpleMatrix two = meanAlongRows.meanAlongRows(one,1,0); // (0.5*(A2 - y) ** 2).mean(axis=1)
         return two.elementSum()/w1.numRows(); // np.sum((0.5*(A2 - y) ** 2).mean(axis=1))
     }
 
 
+    /**
+     * Propagates the error backwards through the neural network
+     * Calculates the new weights and biases of this iteration and
+     * stores them in the gradients ArrayList
+     * @param input         The input given to the neural network
+     * @param actualOutput  The output the neural network should produce, given the input
+     */
     public void backwardsPropagation(SimpleMatrix input, SimpleMatrix actualOutput) {
         ApplySpecial meanAlongRows = new ApplySpecial();
         // Get activation values
@@ -87,11 +101,14 @@ public class NeuralNetwork {
         // Compute the difference between the predicted value and the real values
         SimpleMatrix dZ2 = a2.minus(actualOutput);
         SimpleMatrix dW2 = dZ2.mult(a1.transpose()).scale(1.0/w1.numRows());
-        SimpleMatrix db2 = meanAlongRows.meanAlongRows(dZ2,0,1).scale(1.0/w1.numCols());
+
+        SimpleMatrix db2 = new SimpleMatrix(1,1);
+        double db2Content = dZ2.elementSum()/w1.numRows();
+        db2.setRow(0,0,db2Content);
 
         SimpleMatrix dZ1 = w2.transpose().mult(dZ2).mult(a1.elementPower(2).negative().plus(1));
         SimpleMatrix dW1 = dZ1.mult(input.transpose()).scale(1.0/w1.numRows());
-        SimpleMatrix db1 = meanAlongRows.meanAlongRows(dZ1,0,1).scale(1.0/w1.numCols());
+        SimpleMatrix db1 = meanAlongRows.meanAlongRows(dZ1,1,1).scale(1.0/w1.numRows()); // mode 1: sum
 
         // Save Results
         gradients.add(dW1);
@@ -100,6 +117,11 @@ public class NeuralNetwork {
         gradients.add(db2);
     }
 
+    /**
+     * Updates the weights and biases to their new values
+     * This shouldn't be called unless backwardsPropagation and forwardsPropagation were called first
+     * @param learningRate  The size of the changes made in each iteration
+     */
     public void updateParameters(double learningRate){
         SimpleMatrix dw1 = gradients.get(0);
         SimpleMatrix db1 = gradients.get(1);
@@ -113,10 +135,17 @@ public class NeuralNetwork {
     }
 
 
+    /**
+     * Trains the neural network
+     * @param input         The input given
+     * @param actualOutput  The desired output
+     * @param n_iterations  The number of iterations wanted
+     * @param learningRate  The size of the changes made in each iteration
+     */
     public void model(SimpleMatrix input, SimpleMatrix actualOutput, int n_iterations, double learningRate){
         initializeParameters(nFirst,nHidden,nOut);
         for (int i = 0; i < n_iterations; i++){
-            forwardPropagation(input);
+            forwardsPropagation(input);
 //            double cost = calculateCost(A2,actualOutput);
             backwardsPropagation(input,actualOutput);
             updateParameters(learningRate);
@@ -124,19 +153,13 @@ public class NeuralNetwork {
     }
 
     public SimpleMatrix predict(SimpleMatrix input){
-        SimpleMatrix A2 = forwardPropagation(input);
         ApplyActivation activation = new ApplyActivation();
+        SimpleMatrix A2 = forwardsPropagation(input);
         return activation.applyFunction(A2);
     }
 
 
-
-
-
-
-
     // Getters and Setters
-
 
     public ArrayList<SimpleMatrix> getGradients() {
         return gradients;
