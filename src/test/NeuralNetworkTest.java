@@ -141,13 +141,32 @@ public class NeuralNetworkTest {
         NN.model(X,Y,nIterations,learningRate);
 
         // Make predictions
-        SimpleMatrix predictions00 = NN.predict(X);
-        String conf = NN.ConfusionMatrix(predictions00,Y);
+        SimpleMatrix test00 = new SimpleMatrix(2,1);
+        test00.setRow(0,0,0);
+        test00.setRow(1,0,0);
+        SimpleMatrix pred00 = NN.predict(test00);
 
-        assertEquals(0.0,predictions00.get(0,0));
-        assertEquals(1.0,predictions00.get(0,0));
-        assertEquals(1.0,predictions00.get(0,0));
-        assertEquals(0.0,predictions00.get(0,0));
+        SimpleMatrix test01 = new SimpleMatrix(2,1);
+        test01.setRow(0,0,0);
+        test01.setRow(1,0,1);
+        SimpleMatrix pred01 = NN.predict(test01);
+
+        SimpleMatrix test10 = new SimpleMatrix(2,1);
+        test10.setRow(0,0,1);
+        test10.setRow(1,0,0);
+        SimpleMatrix pred10 = NN.predict(test10);
+
+        SimpleMatrix test11 = new SimpleMatrix(2,1);
+        test11.setRow(0,0,1);
+        test11.setRow(1,0,1);
+        SimpleMatrix pred11 = NN.predict(test11);
+
+//        String conf = NN.ConfusionMatrix(predictions,Y);
+
+        assertEquals(0.0,pred00.get(0,0));
+        assertEquals(1.0,pred01.get(0,0));
+        assertEquals(1.0,pred10.get(0,0));
+        assertEquals(1.0,pred11.get(0,0));
     }
 
     /**

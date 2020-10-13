@@ -3,12 +3,15 @@ package operations;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 /**
  * This class is used to store methods that make some operations with matrices
  * Made because I couldn't get this to work with the ejml
  */
 public class ApplySpecial extends ApplyToMatrix{
+    Random random = new Random();
 
     /**
      * The supposed purpose of this matrix
@@ -101,5 +104,22 @@ public class ApplySpecial extends ApplyToMatrix{
             out = out.transpose();
         }
         return out;
+    }
+
+
+    public SimpleMatrix MatrixShuffle(SimpleMatrix input){
+        int limit = input.numCols();
+        ArrayList<Integer> order = new ArrayList<>();
+        for (int i = 0; i < limit; i++){
+            order.add(i);
+        }
+        Collections.shuffle(order);
+        SimpleMatrix newInput = new SimpleMatrix(input.numRows(), input.numCols());
+        for (int j = 0; j < limit; j ++){
+            for (int p = 0; p < input.numRows(); p++){
+                newInput.set(p,order.get(j),input.get(p,j));
+            }
+        }
+        return newInput;
     }
 }

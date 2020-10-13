@@ -11,7 +11,6 @@ import java.util.ArrayList;
  *      bij = operation(aij)
  */
 public abstract class ApplyToMatrix {
-
     /**
      * Abstract method meant to be replaced by inheriting classes
      * @param input input from the matrix

@@ -2,10 +2,7 @@ package neurons;
 
 import operations.*;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import org.ejml.simple.*;
 
@@ -106,10 +103,11 @@ public class NeuralNetwork {
         // Compute the difference between the predicted value and the real values
         SimpleMatrix dZ2 = a2.minus(actualOutput);
         SimpleMatrix dW2 = dZ2.mult(a1.transpose()).scale(1.0/w1.numRows());
+        SimpleMatrix db2 = special.meanAlongRows(dZ2,1,1).scale(1.0/w1.numRows());
 
-        SimpleMatrix db2 = new SimpleMatrix(1,1);
-        double db2Content = dZ2.elementSum()/w1.numRows();
-        db2.setRow(0,0,db2Content);
+//        SimpleMatrix db2 = new SimpleMatrix(1,1);
+//        double db2Content = dZ2.elementSum()/w1.numRows();
+//        db2.setRow(0,0,db2Content);
 
         SimpleMatrix dZ1 = w2.transpose().mult(dZ2).elementMult(a1.elementPower(2).negative().plus(1));
         SimpleMatrix dW1 = dZ1.mult(input.transpose()).scale(1.0/w1.numRows());
@@ -147,25 +145,16 @@ public class NeuralNetwork {
      * @param n_iterations  The number of iterations wanted
      * @param learningRate  The size of the changes made in each iteration
      */
-    // For testing with the same initial w and b of the Python version
-//    this.w1 = new SimpleMatrix(4,2);
-//    w1.setRow(0,0,0.4967141530112327,-0.13826430117118466);
-//    w1.setRow(1,0,0.6476885381006925,1.5230298564080254);
-//    w1.setRow(2,0,-0.23415337472333597,-0.23413695694918055);
-//    w1.setRow(3,0,1.5792128155073915,0.7674347291529088);
-//    this.w2 =  new SimpleMatrix(1,4);
-//    w2.setRow(0,0,-0.4694743859349521,0.5425600435859647,-0.46341769281246226,-0.46572975357025687);
-    public void model(SimpleMatrix input, SimpleMatrix actualOutput, int n_iterations, double learningRate) throws FileNotFoundException {
+    public void model(SimpleMatrix input, SimpleMatrix actualOutput, int n_iterations, double learningRate) {
         initializeParameters(nFirst,nHidden,nOut);
         int k = 0;
         for (int i = 0; i < n_iterations; i++){
             SimpleMatrix A2 = forwardsPropagation(input);
             // Confusion Matrix Data
             ApplyOneHot oneHot = new ApplyOneHot(A2);
-
+            SimpleMatrix coded = oneHot.applyFunction(A2);
             double cost = calculateCost(A2,actualOutput);
             trainingCost.add(cost);
-
             backwardsPropagation(input,actualOutput);
             updateParameters(learningRate);
         }
@@ -178,32 +167,62 @@ public class NeuralNetwork {
     }
 
     public String ConfusionMatrix(SimpleMatrix predictions, SimpleMatrix actualOutput){
-        int TP = 0;
-        int TN = 0;
-        int FP = 0;
-        int FN = 0;
+        ArrayList<Integer> A = new ArrayList<>();
+        ArrayList<Integer> B = new ArrayList<>();
+        ArrayList<Integer> C = new ArrayList<>();
+        int Aa = 0;
+        int Ab = 0;
+        int Ac = 0;
+        int Ba = 0;
+        int Bb = 0;
+        int Bc = 0;
+        int Ca = 0;
+        int Cb = 0;
+        int Cc = 0;
+        // Horrible
         for (int i = 0; i < predictions.numCols(); i++){
-            if (predictions.get(0,i) == 0){
-                if (actualOutput.get(0,i) == 0){
-                    TN++;
+            // A
+            if (actualOutput.get(0,i) == 1){
+                if (predictions.get(0,i) == 1){
+                    Aa ++;
                 }
-                else{
-                    FN++;
+                else if (predictions.get(1,i) == 1){
+                    Ab ++;
+                }
+                else if (predictions.get(2,i) == 1){
+                    Ac ++;
                 }
             }
-            else if (predictions.get(0,i) == 1){
-                if (actualOutput.get(0,i) == 0){
-                    FP++;
+            // B
+            else if (actualOutput.get(1,i) == 1){
+                if (predictions.get(0,i) == 1){
+                    Ba ++;
                 }
-                else{
-                    TP++;
+                else if (predictions.get(1,i) == 1){
+                    Bb ++;
+                }
+                else if (predictions.get(2,i) == 1){
+                    Bc ++;
+                }
+            }
+            // C
+            else if (actualOutput.get(2,i) == 1){
+                if (predictions.get(0,i) == 1){
+                    Ca ++;
+                }
+                else if (predictions.get(1,i) == 1){
+                    Cb ++;
+                }
+                else if (predictions.get(2,i) == 1){
+                    Cc ++;
                 }
             }
         }
-        String output = String.format("      P   |   N\n" +
-                        "P  TP = %d| FP = %d\n" +
-                        "N  FN = %d| TN = %d",
-                        TP, FP, FN, TN);
+        String output = String.format("               |  Real Setosa  |  Real Versicolor  |  Real Virginica  \n" +
+                        "Pred Setosa    |      %d       |         %d         |        %d        \n" +
+                        "Pred Versicolor|      %d       |         %d         |        %d        \n" +
+                        "Pred Virginica |      %d       |         %d         |        %d        ",
+                        Aa, Ab, Ac, Ba, Bb, Bc, Ca, Cb, Cc);
         return output;
     }
 
@@ -229,32 +248,10 @@ public class NeuralNetwork {
         return b1;
     }
 
-    public SimpleMatrix getB2() {
-        return b2;
-    }
+    public SimpleMatrix getB2() { return b2; }
 
     public ArrayList<Double> getTrainingCost() {
         return trainingCost;
-    }
-
-    public void setW1(SimpleMatrix w1) {
-        this.w1 = w1;
-    }
-
-    public void setW2(SimpleMatrix w2) {
-        this.w2 = w2;
-    }
-
-    public void setB1(SimpleMatrix b1) {
-        this.b1 = b1;
-    }
-
-    public void setB2(SimpleMatrix b2) {
-        this.b2 = b2;
-    }
-
-    public void setRandomSeed(int randomSeed) {
-        this.randomSeed = randomSeed;
     }
 
     public void setNumberOfLayers(int nFirst, int nHidden, int nOut){
