@@ -1,5 +1,6 @@
 package geneticAlgorithm;
 
+import geneticAlgorithm.Individuals.Individual;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -13,7 +14,9 @@ public abstract class FXPlotter extends Application {
     protected ArrayList<Integer> dataBest = new ArrayList<>();
     protected ArrayList<Integer> dataWorst = new ArrayList<>();
     protected ArrayList<Integer> dataMean = new ArrayList<>();
+    protected Engine engine;
     protected int iterations;
+    protected Individual target;
 
     /**
      * Method that will be overwritten by each type of graph
@@ -41,6 +44,18 @@ public abstract class FXPlotter extends Application {
         this.dataWorst = data2;
         this.dataMean = data3;
         this.iterations = dataBest.size();
+    }
+
+//    public  void setController(Controller controller){
+//        this.controller = controller;
+//    }
+
+    public void setTarget(Individual target){
+        this.target = target;
+    }
+
+    public void setEngine(Engine engine){
+        this.engine = engine;
     }
 }
 

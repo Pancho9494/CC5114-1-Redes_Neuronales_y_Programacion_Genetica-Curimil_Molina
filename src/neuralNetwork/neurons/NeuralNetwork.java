@@ -27,6 +27,7 @@ public class NeuralNetwork {
 
 
     /**
+     * Equivalent to initialize_parameters in NeuralNetwork.py
      * Sets the initial parameters of the neural network (random weights and zero bias)
      * It also clears the activationValues and gradients ArrayLists
      * @param nFirst    number of neuralNetwork.datasets.neurons in first layer
@@ -46,6 +47,7 @@ public class NeuralNetwork {
     }
 
     /**
+     * Equivalent to forward_prop in NeuralNetwork.py
      * Propagates the input through the neural network
      * @param input Input vector represented as ArrayList<ArrayList<Double>>
      * @return output vector represented as ArrayList<ArrayList<Double>>
@@ -74,6 +76,7 @@ public class NeuralNetwork {
 
 
     /**
+     * Equivalent to calculate_cost in NeuralNetwork.py
      * Calculates the cost between prediction and the actual output
      * @param NNOutput The prediction made by the neural network
      * @param actualOutput The actual output
@@ -88,6 +91,7 @@ public class NeuralNetwork {
 
 
     /**
+     * Equivalent to backward_prop in NeuralNetwork.py
      * Propagates the error backwards through the neural network
      * Calculates the new weights and biases of this iteration and
      * stores them in the gradients ArrayList
@@ -121,6 +125,7 @@ public class NeuralNetwork {
     }
 
     /**
+     * Equivalent to update_parameters in NeuralNetwork.py
      * Updates the weights and biases to their new values
      * This shouldn't be called unless backwardsPropagation and forwardsPropagation were called first
      * @param learningRate  The size of the changes made in each iteration
@@ -139,6 +144,7 @@ public class NeuralNetwork {
 
 
     /**
+     * Equivalent to model in NeuralNetwork.py
      * Trains the neural network
      * @param input         The input given
      * @param actualOutput  The desired output
@@ -160,12 +166,26 @@ public class NeuralNetwork {
         }
     }
 
+    /**
+     * Equivalent to predict in NeuralNetwork.py
+     * Makes the prediction of the neural network
+     * @param input the input data
+     * @return the prediction
+     */
     public SimpleMatrix predict(SimpleMatrix input){
         ApplyActivation activation = new ApplyActivation();
         SimpleMatrix A2 = forwardsPropagation(input);
         return activation.applyFunction(A2);
     }
 
+
+    /**
+     * Displays the confusion matrix of the results
+     * The current implementation is horrible and should be changed in the future
+     * @param predictions the predictions made by the neural network
+     * @param actualOutput the actual values the neural network should have predicted
+     * @return a String representing the confusion matrix
+     */
     public String ConfusionMatrix(SimpleMatrix predictions, SimpleMatrix actualOutput){
         ArrayList<Integer> A = new ArrayList<>();
         ArrayList<Integer> B = new ArrayList<>();
@@ -179,7 +199,7 @@ public class NeuralNetwork {
         int Ca = 0;
         int Cb = 0;
         int Cc = 0;
-        // Horrible
+        // Horrible, this should be changed but we don't have more time
         for (int i = 0; i < predictions.numCols(); i++){
             // A
             if (actualOutput.get(0,i) == 1){
@@ -227,7 +247,6 @@ public class NeuralNetwork {
     }
 
     // Getters and Setters
-
     public ArrayList<SimpleMatrix> getGradients() {
         return gradients;
     }
@@ -248,7 +267,9 @@ public class NeuralNetwork {
         return b1;
     }
 
-    public SimpleMatrix getB2() { return b2; }
+    public SimpleMatrix getB2() {
+        return b2;
+    }
 
     public ArrayList<Double> getTrainingCost() {
         return trainingCost;

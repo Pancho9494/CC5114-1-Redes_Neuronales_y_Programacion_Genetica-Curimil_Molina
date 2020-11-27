@@ -3,7 +3,7 @@ package neuralNetwork.operations;
 import org.ejml.simple.SimpleMatrix;
 
 /**
- * Template patter design
+ * Template pattern design
  * Applies an operation to each element of a matrix
  * If A is the input matrix and B is the output:
  *      bij = operation(aij)

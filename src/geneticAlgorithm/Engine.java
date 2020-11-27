@@ -1,5 +1,9 @@
 package geneticAlgorithm;
 
+import geneticAlgorithm.Individuals.Factory.*;
+import geneticAlgorithm.fitness.*;
+import geneticAlgorithm.Individuals.*;
+import geneticAlgorithm.geneticOperators.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,21 +13,24 @@ import java.util.Random;
  */
 public class Engine {
     private Random random = new Random();
-    private ArrayList<Character[]> contents = new ArrayList<>();
+    private ArrayList<Individual> population = new ArrayList<>();
     private ArrayList<Integer> bestFitnessHistory = new ArrayList<>();
     private ArrayList<Integer> worstFitnessHistory = new ArrayList<>();
     private ArrayList<Integer> meanFitnessHistory = new ArrayList<>();
     private FitnessFunctions fitness;
-    private Character[] targetWord;
-    private Character[] currentBest;
-    private Character[] currentWorst;
-    double mutationRate = 0.2;
-    int selectionWindowSize = 5;
-    int currentGeneration;
-    int currentBestFitness;
-    int currentWorstFitness;
-    int populationSize;
-    int numberOfGenes;
+    private Individual targetWord;
+    private Individual currentBest;
+    private Individual currentWorst;
+    private IIndividualFactory individualFactory;
+    private ACrossover crossover;
+    private AMutation mutation;
+    private double mutationRate = 0.2;
+    private int selectionWindowSize = 5;
+    private int currentGeneration;
+    private int currentBestFitness;
+    private int currentWorstFitness;
+    private int populationSize;
+    private int numberOfGenes;
 
 
     /**
@@ -36,7 +43,7 @@ public class Engine {
         this.numberOfGenes = numberOfGenes;
         this.currentGeneration = 0;
         for (int i = 0; i < populationSize; i ++){
-            contents.add(generateIndividual(numberOfGenes));
+            population.add(generateIndividual(numberOfGenes));
         }
     }
 
@@ -45,72 +52,37 @@ public class Engine {
      * @param size number of genes of the individual
      * @return the individual as a Character array
      */
-    public Character[] generateIndividual(int size){
-        Character[] out = new Character[size];
-        for (int i = 0; i < size; i++){
-            out[i] = (char) ('a' + random.nextInt(26));
-        }
-        return out;
+    public Individual generateIndividual(int size){
+        Individual ind = this.individualFactory.create(size);
+        ind.initialize();
+        return ind;
     }
 
     /**
      * Selects an individual from the current population via the tournament method
+     * The selection phase should be extracted as classes so the Engine could use more than the tournament method
      * @param selectionSize how many individuals we choose for each tournament
      * @return the best individual of the tournament
      */
-    public Character[] tournamentSelection(int selectionSize){
+    public Individual tournamentSelection(int selectionSize){
         // Get random individuals from population
-        ArrayList<Character[]> subPopulation = new ArrayList<>();
+        ArrayList<Individual> subPopulation = new ArrayList<>();
         for (int i = 0; i < selectionSize; i++){
-            int rand = random.nextInt(contents.size());
-            subPopulation.add(contents.get(rand));
+            int rand = random.nextInt(population.size());
+            subPopulation.add(population.get(rand));
         }
         // Get best from subPopulation
-        Character[] out = new Character[numberOfGenes];
-        int best = 0;
+        int bestIndex = 0;
+        int best = -99999;
         for (int i = 0; i < selectionSize; i++) {
-            Character[] testSubject = subPopulation.get(i);
+            Individual testSubject = subPopulation.get(i);
             int score = fitness.evaluate(testSubject);
             if (score >= best){
                 best = score;
-                out = testSubject;
+                bestIndex = i;
             }
         }
-        return out;
-    }
-
-    /**
-     * Two individuals reproduce via the crossover method
-     * @param parent1 parent of the new individual
-     * @param parent2 parent of the new individual
-     * @return the resulting children of the crossover
-     */
-    public Character[] crossover(Character[] parent1, Character[] parent2){
-        Character[] child = new Character[parent1.length];
-        // Randomly cut words between 0 and length - 1
-        int cut = random.nextInt(parent1.length - 1) + 1;
-        for (int i = 0; i < cut; i ++) {
-            child[i] = parent1[i];
-        }
-        for (int j = cut; j < parent2.length; j ++){
-            child[j] = parent2[j];
-        }
-        return child;
-    }
-
-    /**
-     * Randomly changes one gene from an individual
-     * But only if the rolled double is less than the mutationRate
-     * @param original the individual whose genes have been modified
-     * @return the resulting individual
-     */
-    public Character[] mutate(Character[] original){
-        Character[] copy = copyCharacterArray(original);
-        if (Math.random() <= mutationRate){
-            int mutatedGene = random.nextInt(original.length);
-            copy[mutatedGene] = (char) ('a' + random.nextInt(26));
-        }
-        return copy;
+        return subPopulation.get(bestIndex);
     }
 
     /**
@@ -122,9 +94,11 @@ public class Engine {
      */
     public void newGeneration(){
         for (int i = 0; i < populationSize; i ++){
-            Character[] child = mutate(crossover(tournamentSelection(this.selectionWindowSize),
-                    tournamentSelection(this.selectionWindowSize)));
-            contents.set(i,child);
+            Individual selection1 = tournamentSelection(selectionWindowSize);
+            Individual selection2 = tournamentSelection(selectionWindowSize);
+            Individual cross = crossover.crossover(selection1, selection2, (IndividualFactory) individualFactory);
+            Individual child = mutation.mutate(cross, (IndividualFactory) individualFactory, mutationRate);
+            population.set(i,child);
         }
     }
 
@@ -136,15 +110,17 @@ public class Engine {
      */
     public boolean isSolutionFound(){
         int bestIndex = 0;
-        int bestResult = 0;
+        int bestResult = -999999;
         int worstIndex = 0;
-        int worstResult = 0;
-        for (int i = 0; i < contents.size(); i ++ ){
-            int fit = fitness.evaluate(contents.get(i));
+        int worstResult = 9999;
+        for (int i = 0; i < population.size(); i ++ ){
+            int fit = fitness.evaluate(population.get(i));
             if (fit == fitness.getGoal()){
-                this.currentBest = contents.get(i);
-                this.currentBestFitness = fitness.evaluate(contents.get(i));
+                this.currentBest = population.get(i);
+                this.currentBestFitness = fitness.evaluate(population.get(i));
                 bestFitnessHistory.add(currentBestFitness);
+                worstFitnessHistory.add(currentBestFitness);
+                meanFitnessHistory.add(currentBestFitness);
                 return true;
             }
             else{
@@ -158,12 +134,12 @@ public class Engine {
                 }
             }
         }
-        this.currentBest = contents.get(bestIndex);
-        this.currentBestFitness = fitness.evaluate(contents.get(bestIndex));
+        this.currentBest = population.get(bestIndex);
+        this.currentBestFitness = fitness.evaluate(population.get(bestIndex));
         bestFitnessHistory.add(currentBestFitness);
 
-        this.currentWorst = contents.get(worstIndex);
-        this.currentWorstFitness = fitness.evaluate(contents.get(worstIndex));
+        this.currentWorst = population.get(worstIndex);
+        this.currentWorstFitness = fitness.evaluate(population.get(worstIndex));
         worstFitnessHistory.add(currentWorstFitness);
 
         meanFitnessHistory.add((int) ((currentBestFitness + currentWorstFitness)/2));
@@ -182,11 +158,14 @@ public class Engine {
      * @param fitness the fitness function used to test the individuals
      * @return the best individual found by the algorithm
      */
-    public Character[] executeAlgorithm(int maxGenerations, double mutationRate, int populationSize,
-                                        int numberOfGenes, int selectionWindowSize, FitnessFunctions fitness){
+    public Individual executeAlgorithm(int maxGenerations, double mutationRate, int populationSize,
+                                       int numberOfGenes, int selectionWindowSize, FitnessFunctions fitness,
+                                       ACrossover crossover, AMutation mutation){
+        this.crossover = crossover;
+        this.mutation = mutation;
         initializePopulation(populationSize, numberOfGenes);
         setMutationRate(mutationRate);
-        setFitness(fitness);
+        setFitnessFunction(fitness);
         setSelectionWindowSize(selectionWindowSize);
         while (currentGeneration < maxGenerations) {
             if (isSolutionFound()) {
@@ -201,80 +180,149 @@ public class Engine {
     }
 
     // Getters
+    /**
+     * Mainly used in Tests
+     * @return the size of the population
+     */
     public int getPopulationSize(){
-        return contents.size();
+        return population.size();
     }
 
-    public Character[] getTargetWord() {
+    /**
+     * Mainly used in Tests
+     * @return the target word
+     */
+    public Individual getTargetWord() {
         return targetWord;
     }
 
-    public ArrayList<Character[]> getPopulation() {
-        return contents;
+    /**
+     * Mainly used in Tests
+     * @return the current population
+     */
+    public ArrayList<Individual> getPopulation() {
+        return population;
     }
 
+    /**
+     * Mainly used in Tests
+     * @return the Crossover genetic operator
+     */
+    public ACrossover getCrossover() {
+        return crossover;
+    }
+
+    /**
+     * Mainly used in Tests
+     * @return the Mutation genetic operator
+     */
+    public AMutation getMutation() {
+        return mutation;
+    }
+
+    /**
+     * Used to make the fitness curves
+     * @return the best fitness of each generation
+     */
     public ArrayList<Integer> getBestFitnessHistory() {
         return bestFitnessHistory;
     }
 
+    /**
+     * Used to make the fitness curves
+     * @return the worst fitness of each generation
+     */
     public ArrayList<Integer> getWorstFitnessHistory() {
         return worstFitnessHistory;
     }
 
+    /**
+     * Used to make the fitness curves
+     * @return the mean between the best and the worst fitness of each generation
+     */
     public ArrayList<Integer> getMeanFitnessHistory() {
         return meanFitnessHistory;
     }
 
-    // Setters
-    public void setMutationRate(double mutationRate) {
-        this.mutationRate = mutationRate;
+    /**
+     * Used to show the results of the algorithm
+     * @return the best Individual
+     */
+    public Individual getCurrentBest() {
+        return currentBest;
     }
 
+    /**
+     * Used to show the results of the algorithm
+     * @return the best fitness obtained by the engine
+     */
+    public int getCurrentBestFitness() {
+        return currentBestFitness;
+    }
+
+
+    // Setters
+    /**
+     * Mainly used in Tests for the WordFinder problem
+     * With the new implementation the target is set in the Fitness class
+     * This method should be deleted in the future
+     * @param target the target word
+     */
     public void setTargetWord(String target){
         this.numberOfGenes = target.length();
-        Character word[] = new Character[numberOfGenes];
+        Individual word = new IndividualWord(numberOfGenes);
         for (int i = 0; i < target.length(); i++) {
-            word[i] = target.charAt(i);
+            word.addGene(target.charAt(i));
         }
         targetWord = word;
     }
 
-    public void setFitness(FitnessFunctions fitness) {
-        this.fitness = fitness;
-    }
-
-    public void setSelectionWindowSize(int selectionWindowSize) {
-        this.selectionWindowSize = selectionWindowSize;
-    }
-
+    /**
+     * Mainly used in Tests
+     * @param seed the new Random seed
+     */
     public void setRandomSeed(int seed) {
         this.random.setSeed(seed);
     }
 
-    // Auxiliary Functions
     /**
-     * Copies an array of characters
-     * @param original the original array of characters
-     * @return the copy array
+     * Changes the mutation rate of the algorithm
+     * @param mutationRate the new algorithm rate
      */
-    public Character[] copyCharacterArray(Character[] original){
-        Character[] out = new Character[original.length];
-        for (int i = 0; i < original.length; i++){
-            out[i] = original[i];
-        }
-        return out;
+    public void setMutationRate(double mutationRate) {
+        this.mutationRate = mutationRate;
     }
 
     /**
-     * Converts a string into an array of characters
-     * @param original the original string
-     * @return the resulting Character array
+     * Changes the fitness function used in the algorithm
+     * @param fitness the new fitness function
      */
-    public Character[] stringToCharArray(String original){
-        Character word[] = new Character[original.length()];
-        for (int i = 0; i < original.length(); i++) {
-            word[i] = original.charAt(i);
-        }
-        return word;
+    public void setFitnessFunction(FitnessFunctions fitness) {
+        this.fitness = fitness;
+    }
+
+    /**
+     * Changes the window size used in the tournament selection
+     * Window refers to how many individuals compete in each iteration of the tournament
+     * @param selectionWindowSize the new window size
+     */
+    public void setSelectionWindowSize(int selectionWindowSize) {
+        this.selectionWindowSize = selectionWindowSize;
+    }
+
+    /**
+     * Changes the Individual Factory used in the algorithm
+     * @param anIndividualFactory the new Individual Factory
+     */
+    public void setIndividualFactory(IIndividualFactory anIndividualFactory){
+        this.individualFactory = anIndividualFactory;
+    }
+
+    /**
+     * Changes the Crossover operation used in the algorithm
+     * @param crossover the new Crossover operation
+     */
+    public void setCrossover(ACrossover crossover) {
+        this.crossover = crossover;
     }
 }

@@ -1,5 +1,16 @@
 package geneticAlgorithm;
 
+import geneticAlgorithm.fitness.FitnessMatchWords;
+import geneticAlgorithm.fitness.FitnessNQueens;
+import geneticAlgorithm.Individuals.Factory.IndividualFactory;
+import geneticAlgorithm.Individuals.Factory.NQueenFactory;
+import geneticAlgorithm.Individuals.Factory.WordFactory;
+import geneticAlgorithm.Individuals.Individual;
+import geneticAlgorithm.Individuals.IndividualNQueen;
+import geneticAlgorithm.Individuals.IndividualNull;
+import geneticAlgorithm.Individuals.IndividualWord;
+import geneticAlgorithm.geneticOperators.*;
+import geneticAlgorithm.specialObjects.Queen;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,20 +25,20 @@ public class GATest {
     int populationSize;
     int genes;
 
-    public Character[] stringToCharArray(String original){
-        Character word[] = new Character[original.length()];
+    public Individual stringToIndividual(String original){
+        IndividualWord word = new IndividualWord(original.length());
         for (int i = 0; i < original.length(); i++) {
-            word[i] = original.charAt(i);
+            word.setGene(i,original.charAt(i));
         }
         return word;
     }
 
-    public boolean compareCharArrays(Character[] char1, Character[] char2){
-        if (char1.length != char2.length){
+    public boolean compareCharArrays(Individual ind1, Individual ind2){
+        if (ind1.getChromosomeSize() != ind2.getChromosomeSize()){
             return false;
         }
-        for (int i = 0; i < char1.length; i ++){
-            if (char1[i] != char2[i]){
+        for (int i = 0; i < ind1.getChromosomeSize(); i ++){
+            if (ind1.getGene(i) != ind2.getGene(i)){
                 return false;
             }
         }
@@ -45,7 +56,7 @@ public class GATest {
         int test = random.nextInt(100);
         testPop = new Engine();
         testPop.initializePopulation(populationSize,5);
-        assertEquals(test,testPop.generateIndividual(test).length);
+        assertEquals(test,testPop.generateIndividual(test).getChromosomeSize());
 
     }
 
@@ -55,7 +66,7 @@ public class GATest {
         testPop.initializePopulation(populationSize,5);
         assertEquals(populationSize,testPop.getPopulationSize());
         for (int i = 0; i < populationSize; i ++){
-            assertEquals(5, testPop.getPopulation().get(i).length);
+            assertEquals(5, testPop.getPopulation().get(i).getChromosomeSize());
         }
     }
 
@@ -64,66 +75,72 @@ public class GATest {
         testPop = new Engine();
         testPop.initializePopulation(populationSize,3);
         testPop.setTargetWord("cat");
-        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToCharArray("cat"));
-        testPop.setFitness(fitFunction);
-        Character[] selection = testPop.tournamentSelection(5);
-        assertEquals(testPop.getTargetWord().length, selection.length);
+        IndividualFactory factory = new WordFactory();
+        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToIndividual("cat"),factory);
+        testPop.setFitnessFunction(fitFunction);
+        Individual selection = testPop.tournamentSelection(5);
+        assertEquals(testPop.getTargetWord().getChromosomeSize(), selection.getChromosomeSize());
     }
 
     @Test
     public void crossoverTest(){
         testPop = new Engine();
+        Crossover cross = new Crossover();
+        testPop.setCrossover(cross);
         testPop.initializePopulation(populationSize,5);
         testPop.setRandomSeed(7);
-        Character[] parent1 = stringToCharArray("Table");
-        Character[] parent2 = stringToCharArray("Chair");
-        Character[] result = testPop.crossover(parent1,parent2);
-        assertTrue(compareCharArrays(stringToCharArray("Tabir"), result));
+        Individual parent1 = stringToIndividual("Table");
+        Individual parent2 = stringToIndividual("Chair");
+        Individual result = testPop.getCrossover().crossover(parent1,parent2, new WordFactory());
+        assertTrue(compareCharArrays(stringToIndividual("Tabir"), result));
     }
 
 
     @Test
     public void mutationTest(){
         testPop = new Engine();
+        IndividualFactory factory = new WordFactory();
         testPop.initializePopulation(populationSize,3);
-        Character[] original = stringToCharArray("cat");
+        Individual original = stringToIndividual("cat");
 
         testPop.setMutationRate(1.0);
-        Character[] mutated = testPop.mutate(original);
+        Individual mutated = testPop.getMutation().mutate(original,factory,1.0);
 
-        assertEquals(original.length, mutated.length);
+        assertEquals(original.getChromosomeSize(), mutated.getChromosomeSize());
 
         int difference = 0;
-        for (int i = 0; i < original.length; i ++) {
-            if (original[i] != mutated[i]){
+        for (int i = 0; i < original.getChromosomeSize(); i ++) {
+            if (original.getGene(i) != mutated.getGene(i)){
                 difference ++;
             }
         }
         assertEquals(1,difference);
 
         testPop.setMutationRate(0.0);
-        Character[] notMutated = testPop.mutate(original);
 
-        assertEquals(original.length, notMutated.length);
+        Individual notMutated = testPop.getMutation().mutate(original,factory,0.0);
+
+        assertEquals(original.getChromosomeSize(), notMutated.getChromosomeSize());
 
         int same = 0;
-        for (int i = 0; i < original.length; i ++) {
-            if (original[i] == notMutated[i]){
+        for (int i = 0; i < original.getChromosomeSize(); i ++) {
+            if (original.getGene(i) == notMutated.getGene(i)){
                 same ++;
             }
         }
-        assertEquals(original.length,same);
+        assertEquals(original.getChromosomeSize(),same);
     }
 
     @Test
     public void newGenerationTest(){
         testPop = new Engine();
         testPop.initializePopulation(10,3);
-        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToCharArray("cat"));
+        IndividualFactory factory = new WordFactory();
+        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToIndividual("cat"),factory);
         testPop.setTargetWord("cat");
-        testPop.setFitness(fitFunction);
+        testPop.setFitnessFunction(fitFunction);
 
-        ArrayList<Character[]> original = new ArrayList<>(testPop.getPopulation());
+        ArrayList<Individual> original = new ArrayList<>(testPop.getPopulation());
         testPop.newGeneration();
 
         assertEquals(original.size(), testPop.getPopulation().size());
@@ -137,32 +154,68 @@ public class GATest {
         // Simple word
         String word = "cat";
         testPop = new Engine();
-        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToCharArray(word));
+        Crossover cross = new Crossover();
+        AMutation mutate = new Mutation();
+        testPop.setCrossover(cross);
+        IndividualFactory factory = new WordFactory();
+        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToIndividual(word), factory);
         testPop.setTargetWord(word);
 
-        Character[] expected = stringToCharArray(word);
-        Character[] real = testPop.executeAlgorithm(50, 0.02, 500,
-                                                    word.length(), 3, fitFunction);
+        Individual expected = stringToIndividual(word);
+        Individual real = testPop.executeAlgorithm(50, 0.2, 500,
+                word.length(), 3, fitFunction,cross,mutate);
         assertTrue(compareCharArrays(expected,real));
 
         // Long sentence
-        // transforms into lowercase, without special characters such as "," "-" "'" or "."
-        String inputSentence = "On offering to help the blind man," +
-                " the man who then stole his car, had not, at that precise moment," +
-                " had any evil intention, quite the contrary, what he did was nothing more" +
-                " than obey those feelings of generosity and altruism which, as everyone knows," +
-                " are the two best traits of human nature and to be found in much more hardened criminals" +
-                " than this one, a simple car-thief without any hope of advancing in his profession, exploited by" +
-                " the real owners of this enterprise, for it is they who take advantage of the needs of the poor";
+        // transforms into lowercase, without special characterss such as "," "-" "'" or "."
+//        String inputSentence = "On offering to help the blind man," +
+//                " the man who then stole his car, had not, at that precise moment," +
+//                " had any evil intention, quite the contrary, what he did was nothing more" +
+//                " than obey those feelings of generosity and altruism which, as everyone knows," +
+//                " are the two best traits of human nature and to be found in much more hardened criminals" +
+//                " than this one, a simple car-thief without any hope of advancing in his profession, exploited by" +
+//                " the real owners of this enterprise, for it is they who take advantage of the needs of the poor";
+//
+//        String sentence = inputSentence.toLowerCase().replace(" ", "").replace(",", "").replace("-","");
+//        testPop = new Engine();
+//        FitnessMatchWords fitSentence = new FitnessMatchWords(stringToIndividual(sentence));
+//        testPop.setTargetWord(sentence);
+//
+//        Individual expectedSent = stringToIndividual(sentence);
+//        Individual realSent = testPop.executeAlgorithm(1000, 0.2, 5000,
+//                sentence.length(), 5, fitSentence);
+//        assertTrue(compareCharArrays(expectedSent,realSent));
+    }
 
-        String sentence = inputSentence.toLowerCase().replace(" ", "").replace(",", "").replace("-","");
-        testPop = new Engine();
-        FitnessMatchWords fitSentence = new FitnessMatchWords(stringToCharArray(sentence));
-        testPop.setTargetWord(sentence);
+    @Test
+    public void orderedCrossoverTest(){
+        ACrossover cross = new CrossoverOrdered();
+        IndividualFactory fact = new WordFactory();
+        Individual parent1 = stringToIndividual("table");
+        Individual parent2 = stringToIndividual("chair");
 
-        Character[] expectedSent = stringToCharArray(sentence);
-        Character[] realSent = testPop.executeAlgorithm(1000, 0.02, 5000,
-                                                        sentence.length(), 5, fitSentence);
-        assertTrue(compareCharArrays(expectedSent,realSent));
+        Individual child = cross.crossover(parent1,parent2, fact);
+        assertEquals(child.getNumberOfGenes(), parent1.getNumberOfGenes());
+        assertEquals(child.getNumberOfGenes(), parent2.getNumberOfGenes());
+    }
+
+
+    @Test
+    public void queenFitnessTest(){
+        int expectedScore = 2*4*3;
+        Queen queen0 = new Queen(0,0);
+        Queen queen1 = new Queen(1,0);
+        Queen queen2 = new Queen(2,0);
+        Queen queen3 = new Queen(3,0);
+        IndividualNQueen board = new IndividualNQueen(4);
+        board.setGene(0,queen0);
+        board.setGene(1,queen1);
+        board.setGene(2,queen2);
+        board.setGene(3,queen3);
+        IndividualFactory factory = new NQueenFactory();
+        FitnessNQueens fit = new FitnessNQueens(new IndividualNull(4),factory);
+        assertEquals(expectedScore, fit.evaluate(board));
+
+
     }
 }
