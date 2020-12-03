@@ -161,7 +161,7 @@ public class FXGA extends FXPlotter {
                     color = "black";
                 }
                 square.setStyle("-fx-background-color: "+color+";");
-                ImageView blank = new ImageView(new Image(new FileInputStream("D:\\Carpetas\\Documentos\\Java\\CC5114-1\\Tarea1\\src\\geneticAlgorithm\\resources\\blank.png")));
+                ImageView blank = new ImageView(new Image(new FileInputStream("src/geneticAlgorithm/resources/blank.png")));
                 blank.setFitHeight(piecesSize);
                 blank.setFitWidth(piecesSize);
                 root.add(blank, col, row);
