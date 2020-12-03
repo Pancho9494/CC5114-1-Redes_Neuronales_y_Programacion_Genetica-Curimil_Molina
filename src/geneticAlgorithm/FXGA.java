@@ -19,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -174,13 +175,13 @@ public class FXGA extends FXPlotter {
         }
         for (Queen queen: positions){
             if ((queen.getX() + queen.getY()) % 2 == 0){
-                ImageView blackQueen = new ImageView(new Image(new FileInputStream("D:\\Carpetas\\Documentos\\Java\\CC5114-1\\Tarea1\\src\\geneticAlgorithm\\resources\\blackQueen.png")));
+                ImageView blackQueen = new ImageView(new Image(new FileInputStream("src/geneticAlgorithm/resources/blackQueen.png")));
                 blackQueen.setFitHeight(piecesSize);
                 blackQueen.setFitWidth(piecesSize);
                 root.add(blackQueen, queen.getX(), queen.getY());
             }
             else{
-                ImageView whiteQueen = new ImageView(new Image(new FileInputStream("D:\\Carpetas\\Documentos\\Java\\CC5114-1\\Tarea1\\src\\geneticAlgorithm\\resources\\whiteQueen.png")));
+                ImageView whiteQueen = new ImageView(new Image(new FileInputStream("src/geneticAlgorithm/resources/whiteQueen.png")));
                 whiteQueen.setFitHeight(piecesSize);
                 whiteQueen.setFitWidth(piecesSize);
                 root.add(whiteQueen, queen.getX(), queen.getY());

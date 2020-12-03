@@ -87,6 +87,8 @@ public class GATest {
         testPop = new Engine();
         Crossover cross = new Crossover();
         testPop.setCrossover(cross);
+        IndividualFactory factory = new WordFactory();
+        testPop.setIndividualFactory(factory);
         testPop.initializePopulation(populationSize,5);
         testPop.setRandomSeed(7);
         Individual parent1 = stringToIndividual("Table");
@@ -134,9 +136,13 @@ public class GATest {
     @Test
     public void newGenerationTest(){
         testPop = new Engine();
-        testPop.initializePopulation(10,3);
         IndividualFactory factory = new WordFactory();
-        FitnessMatchWords fitFunction = new FitnessMatchWords(stringToIndividual("cat"),factory);
+        testPop.setIndividualFactory(factory);
+        testPop.initializePopulation(10,3);
+        FitnessMatchWords fitFunction = new FitnessMatchWords("cat",factory);
+        Crossover cross = new Crossover();
+        testPop.setCrossover(cross);
+        Mutation mutation = new Mutation();
         testPop.setTargetWord("cat");
         testPop.setFitnessFunction(fitFunction);
 

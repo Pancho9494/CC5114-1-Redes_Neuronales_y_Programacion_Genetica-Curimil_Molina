@@ -20,9 +20,9 @@ public class main extends Application {
     private static FXGA demo;
 
     public static void main(String[] args) {
-        wordFinder("paralelepipedo");
+//        wordFinder("paralelepipedo");
 //        binaryFinder(121);
-//        nQueenFinder(18);
+        nQueenFinder(5);
     }
 
     public static void wordFinder(String input){
