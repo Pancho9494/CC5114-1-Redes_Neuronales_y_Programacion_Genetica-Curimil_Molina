@@ -28,9 +28,9 @@ public class GPTest {
 
     @Before
     public void setUp(){
-        four = new ContentConstant(4);
-        five = new ContentConstant(5);
-        two = new ContentConstant(2);
+        four = new ContentConstant(4,null);
+        five = new ContentConstant(5,null);
+        two = new ContentConstant(2,null);
         plus = new ContentFunctionPlus('+');
         times = new ContentFunctionTimes('*');
         Node lNode = new Node(four,
@@ -46,7 +46,7 @@ public class GPTest {
         root = new Node(plus, lNode, rNode);
         tree = new Tree(root);
 
-        numbers.add(11.0);
+        numbers.add(1.0);
         numbers.add(2.0);
         numbers.add(3.0);
         numbers.add(4.0);
@@ -92,11 +92,11 @@ public class GPTest {
     @Test
     public void replaceTest(){
         Node lNode = new Node(
-                new ContentConstant(3),
+                new ContentConstant(3,null),
                 null,
                 null);
         Node rNode = new Node(
-                new ContentConstant(4),
+                new ContentConstant(4,null),
                 null,
                 null);
         Node root = new Node(
@@ -123,17 +123,17 @@ public class GPTest {
     public void crossoverTest(){
         CrossoverSubTree cross = new CrossoverSubTree();
         Node lNode = new Node(
-                new ContentConstant(3),
+                new ContentConstant(3,null),
                 null,
                 null);
         Node rNode = new Node(
                 new ContentFunctionPlus('+'),
                 new Node(
-                        new ContentConstant(6),
+                        new ContentConstant(6,null),
                         null,
                         null),
                 new Node(
-                        new ContentConstant(4),
+                        new ContentConstant(4,null),
                         null,
                         null)
         );
@@ -159,7 +159,7 @@ public class GPTest {
         double mutRate = 0.5;
         GPEngine GP = new GPEngine(popSize, maxDepth, mutRate);
         GP.setInputNumbers(numbers);
-        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth);
+        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth, false);
 //        String out = null;
         for (int i = 0; i < 5; i++){
             assertTrue(population.get(i).depth() <= 3);
@@ -171,10 +171,8 @@ public class GPTest {
     public void mutationTest(){
         GPEngine GP = new GPEngine(5,3,0.5);
         GP.setInputNumbers(numbers);
-        System.out.print("Original= "+tree.print()+"\n");
         MutationSubTree mut = new MutationSubTree(GP);
         Tree result = mut.mutate(tree);
-        System.out.print("Mutate= "+result.print());
         assertTrue(result.depth() <= 3);
     }
 }

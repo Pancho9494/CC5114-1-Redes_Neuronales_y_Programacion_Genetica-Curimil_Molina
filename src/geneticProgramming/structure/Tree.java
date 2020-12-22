@@ -1,10 +1,6 @@
 package geneticProgramming.structure;
 
-import geneticProgramming.nodeContents.*;
-import geneticProgramming.nodeContents.Visitor;
-
-import java.util.ArrayList;
-import java.util.Random;
+import geneticProgramming.nodeContents.EvaluationVisitor;
 
 public class Tree {
     private Node rootNode;
@@ -28,8 +24,8 @@ public class Tree {
      * @return
      */
     public double evaluate(){
-        Visitor visitor = new Visitor();
-        return this.rootNode.accept(visitor);
+        EvaluationVisitor evaluationVisitor = new EvaluationVisitor();
+        return this.rootNode.acceptEvaluation(evaluationVisitor);
     }
 
     /**

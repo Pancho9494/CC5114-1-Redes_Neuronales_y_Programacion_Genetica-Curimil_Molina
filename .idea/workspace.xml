@@ -1,32 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
-    <select />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="622d763f-26a2-499a-8c4e-717106ecef01" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/javafx11.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CC5114-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CC5114-1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CC5114-1/META-INF/CC5114-1.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CC5114-1/geneticProgramming/GPTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CC5114-1/geneticProgramming/GPTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geneticProgramming/GPTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/geneticProgramming/GPTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tarea1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tarea1/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,12 +17,13 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/Tarea1" />
   </component>
   <component name="ProjectId" id="1h3l9sW8z8klMMfcCRWFBXtq6nA" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -55,11 +32,10 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="extract.method.default.visibility" value="public" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Tarea1" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -84,38 +60,7 @@
       <recent name="D:\Carpetas\Documentos\Java\CC5114-1\src" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.GPTest.mutationTest">
-    <configuration name="GPTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CC5114-1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="geneticProgramming.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="geneticProgramming" />
-      <option name="MAIN_CLASS_NAME" value="geneticProgramming.GPTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GPTest.mutationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CC5114-1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="geneticProgramming.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="geneticProgramming" />
-      <option name="MAIN_CLASS_NAME" value="geneticProgramming.GPTest" />
-      <option name="METHOD_NAME" value="mutationTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.NeuralNetworkTest.modelPredictTest">
     <configuration name="NeuralNetworkTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CC5114-1" />
       <extension name="coverage">
@@ -127,6 +72,22 @@
       <option name="PACKAGE_NAME" value="test" />
       <option name="MAIN_CLASS_NAME" value="test.NeuralNetworkTest" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NeuralNetworkTest.backPropagationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CC5114-1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="test" />
+      <option name="MAIN_CLASS_NAME" value="test.NeuralNetworkTest" />
+      <option name="METHOD_NAME" value="backPropagationTest" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -163,13 +124,29 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="NeuralNetworkTest.updateParametersTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CC5114-1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="test" />
+      <option name="MAIN_CLASS_NAME" value="test.NeuralNetworkTest" />
+      <option name="METHOD_NAME" value="updateParametersTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.GPTest.mutationTest" />
-        <item itemvalue="JUnit.GPTest" />
         <item itemvalue="JUnit.NeuralNetworkTest.modelPredictTest" />
         <item itemvalue="JUnit.NeuralNetworkTest" />
         <item itemvalue="JUnit.NeuralNetworkTest.calculateCostTest" />
+        <item itemvalue="JUnit.NeuralNetworkTest.backPropagationTest" />
+        <item itemvalue="JUnit.NeuralNetworkTest.updateParametersTest" />
       </list>
     </recent_temporary>
   </component>
@@ -188,23 +165,11 @@
       <workItem from="1600789053300" duration="33826000" />
       <workItem from="1601757175860" duration="3208000" />
       <workItem from="1601834552845" duration="23823000" />
-      <workItem from="1608650881473" duration="4594000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
+    <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
     <state x="92" y="92" width="1736" height="856" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1601850795185">
@@ -215,6 +180,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1601853388406" />
+    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1599864682597">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1599864682597" />
     <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1601857751122">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -227,42 +196,42 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="261" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1601857357966" />
-    <state width="1877" height="348" key="GridCell.Tab.0.bottom" timestamp="1608655615601">
+    <state width="914" height="228" key="GridCell.Tab.0.bottom" timestamp="1601860193403">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.0.center" timestamp="1608655615601">
+    <state width="914" height="228" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193403" />
+    <state width="914" height="228" key="GridCell.Tab.0.center" timestamp="1601860193402">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.0.left" timestamp="1608655615601">
+    <state width="914" height="228" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193402" />
+    <state width="914" height="228" key="GridCell.Tab.0.left" timestamp="1601860193402">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.0.right" timestamp="1608655615601">
+    <state width="914" height="228" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193402" />
+    <state width="914" height="228" key="GridCell.Tab.0.right" timestamp="1601860193402">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1608655615601">
+    <state width="914" height="228" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193402" />
+    <state width="914" height="538" key="GridCell.Tab.1.bottom" timestamp="1601860193393">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1608655615601">
+    <state width="914" height="538" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193393" />
+    <state width="914" height="538" key="GridCell.Tab.1.center" timestamp="1601860193393">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1608655615601">
+    <state width="914" height="538" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193393" />
+    <state width="914" height="538" key="GridCell.Tab.1.left" timestamp="1601860193393">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1608655615601">
+    <state width="914" height="538" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193393" />
+    <state width="914" height="538" key="GridCell.Tab.1.right" timestamp="1601860193393">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608655615601" />
-    <state x="440" y="94" key="SettingsEditor" timestamp="1608650983555">
+    <state width="914" height="538" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1601860193393" />
+    <state x="440" y="94" key="SettingsEditor" timestamp="1601834891095">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="440" y="94" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1608650983555" />
+    <state x="440" y="94" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1601834891095" />
     <state x="656" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1601834565367">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -293,22 +262,9 @@
     <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1601836220416" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/geneticProgramming/GPTest.java</url>
-          <line>170</line>
-          <properties class="geneticProgramming.GPTest" method="mutationTest">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="JUnit">
         <watch expression="NN" language="JAVA" />
-        <watch expression="((GPTest)this).numbers" custom="geneticProgramming.GPTest" />
       </configuration>
       <configuration name="Application">
         <watch expression="steps" language="JAVA" />

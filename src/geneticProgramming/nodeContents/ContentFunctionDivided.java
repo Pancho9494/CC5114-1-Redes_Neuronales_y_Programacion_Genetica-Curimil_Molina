@@ -19,8 +19,13 @@ public class ContentFunctionDivided extends ContentFunction{
     }
 
     @Override
-    public double accept(Visitor visitor, Node owner) {
+    public double acceptEvaluation(EvaluationVisitor evaluationVisitor, Node owner) {
         this.ownerNode = owner;
-        return visitor.forFunctionTimes(this.ownerNode);
+        return evaluationVisitor.forFunctionDivided(this.ownerNode);
+    }
+
+    @Override
+    public Content acceptCopy(CopyVisitor copyVisitor) {
+        return copyVisitor.forFunctionDivided(this);
     }
 }

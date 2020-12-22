@@ -27,23 +27,24 @@ public class main extends Application {
 //        wordFinder("paralelepipedo");
 //        binaryFinder(121);
 //        nQueenFinder(5);
-        double target = 459.0;
+        double target = 595.0;
         ArrayList<Double> numbers = new ArrayList<>();
+        numbers.add(10.0);
+        numbers.add(1.0);
         numbers.add(25.0);
-        numbers.add(7.0);
-        numbers.add(8.0);
-        numbers.add(100.0);
-        numbers.add(4.0);
-        numbers.add(2.0);
-        GPEngine GP = new GPEngine(6,3, 0.5);
+        numbers.add(9.0);
+        numbers.add(3.0);
+        numbers.add(6.0);
+        GPEngine GP = new GPEngine(6,3, 0.3);
         GP.setInputNumbers(numbers);
         GPFitness fit = new GPFitness();
         fit.setTarget(target);
         CrossoverSubTree cross = new CrossoverSubTree();
         MutationSubTree mutate = new MutationSubTree(GP);
-        Tree result = GP.executeAlgorithm(100,0.5,6,
+        Tree result = GP.executeAlgorithm(100,0.3,6,
                 3,5,fit,cross,mutate);
         System.out.println(result.print());
+        System.out.println(result.evaluate());
     }
 
     public static void wordFinder(String input){

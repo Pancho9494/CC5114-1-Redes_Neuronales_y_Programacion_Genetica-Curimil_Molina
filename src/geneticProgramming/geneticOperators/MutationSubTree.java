@@ -19,10 +19,12 @@ public class MutationSubTree extends AGPMutation {
     @Override
     public Tree mutate(Tree original) {
         Tree copy = original.copyTree();
-        int MP = random.nextInt(copy.numberOfNodes());
-        int depthNeeded = copy.extractSubTree(MP).depth();
-        Tree randomTree = engine.generateTrees(1,depthNeeded).get(0);
-        Tree out = copy.replaceSubTree(randomTree,MP);
-        return out;
+        if (Math.random() <= engine.getMutationRate()){
+            int MP = random.nextInt(copy.numberOfNodes());
+            int depthNeeded = copy.extractSubTree(MP).depth();
+            Tree randomTree = engine.generateTrees(1,depthNeeded, true).get(0);
+            copy = copy.replaceSubTree(randomTree,MP);
+        }
+        return copy;
     }
 }

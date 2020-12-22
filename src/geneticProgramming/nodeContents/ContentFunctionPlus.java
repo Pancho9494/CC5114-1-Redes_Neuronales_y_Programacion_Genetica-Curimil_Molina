@@ -14,8 +14,13 @@ public class ContentFunctionPlus extends ContentFunction {
     }
 
     @Override
-    public double accept(Visitor visitor, Node owner) {
+    public double acceptEvaluation(EvaluationVisitor evaluationVisitor, Node owner) {
         this.ownerNode = owner;
-        return visitor.forFunctionPlus(this.ownerNode);
+        return evaluationVisitor.forFunctionPlus(this.ownerNode);
+    }
+
+    @Override
+    public Content acceptCopy(CopyVisitor copyVisitor) {
+        return copyVisitor.forFunctionPlus(this);
     }
 }
