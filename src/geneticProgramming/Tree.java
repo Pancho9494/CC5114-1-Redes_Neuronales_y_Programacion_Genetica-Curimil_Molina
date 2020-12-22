@@ -12,7 +12,7 @@ public class Tree {
     }
 
     public Tree copyTree() {
-        Node newRoot = new Node(this.rootNode.value(), this.rootNode.getLeft(), this.rootNode.getRight());
+        Node newRoot = new Node(this.rootNode.copy().value(), this.rootNode.getLeft().copy(), this.rootNode.getRight().copy());
         return new Tree(newRoot);
     }
 

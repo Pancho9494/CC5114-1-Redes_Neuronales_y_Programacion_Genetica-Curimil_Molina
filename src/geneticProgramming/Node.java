@@ -43,4 +43,8 @@ public class Node {
     public double accept(Visitor visitor){
         return this.content.accept(visitor, this);
     }
+
+    public Node copy(){
+        return new Node(this.content, this.left, this.right);
+    }
 }
