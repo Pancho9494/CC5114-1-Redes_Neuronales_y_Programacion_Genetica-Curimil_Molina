@@ -22,7 +22,7 @@ public class Engine {
     private Individual currentBest;
     private Individual currentWorst;
     private IIndividualFactory individualFactory;
-    private ACrossover crossover;
+    private AGACrossover crossover;
     private AMutation mutation;
     private double mutationRate = 0.2;
     private int selectionWindowSize = 5;
@@ -160,7 +160,7 @@ public class Engine {
      */
     public Individual executeAlgorithm(int maxGenerations, double mutationRate, int populationSize,
                                        int numberOfGenes, int selectionWindowSize, FitnessFunctions fitness,
-                                       ACrossover crossover, AMutation mutation){
+                                       AGACrossover crossover, AMutation mutation){
         this.crossover = crossover;
         this.mutation = mutation;
         initializePopulation(populationSize, numberOfGenes);
@@ -208,7 +208,7 @@ public class Engine {
      * Mainly used in Tests
      * @return the Crossover genetic operator
      */
-    public ACrossover getCrossover() {
+    public AGACrossover getCrossover() {
         return crossover;
     }
 
@@ -322,7 +322,7 @@ public class Engine {
      * Changes the Crossover operation used in the algorithm
      * @param crossover the new Crossover operation
      */
-    public void setCrossover(ACrossover crossover) {
+    public void setCrossover(AGACrossover crossover) {
         this.crossover = crossover;
     }
 }

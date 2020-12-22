@@ -1,9 +1,22 @@
 package geneticProgramming;
 
+import geneticAlgorithm.Engine;
+import geneticAlgorithm.Individuals.Factory.IndividualFactory;
+import geneticAlgorithm.Individuals.Factory.WordFactory;
+import geneticAlgorithm.Individuals.Individual;
+import geneticAlgorithm.geneticOperators.Crossover;
+import geneticProgramming.geneticOperators.CrossoverSubTree;
+import geneticProgramming.nodeContents.ContentConstant;
+import geneticProgramming.nodeContents.ContentFunction;
+import geneticProgramming.nodeContents.ContentFunctionPlus;
+import geneticProgramming.nodeContents.ContentFunctionTimes;
+import geneticProgramming.structure.Node;
+import geneticProgramming.structure.Tree;
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 public class GPTest {
     ContentConstant four;
@@ -84,4 +97,61 @@ public class GPTest {
         Tree newTree = tree.replaceSubTree(newSubTree, 0);
         assertEquals("3.0*4.0+5.0*2.0", newTree.print());
     }
+
+    @Test
+    public void extractTest(){
+        Tree newTree = tree.extractSubTree(1);
+        assertEquals("5.0*2.0",newTree.print());
+    }
+
+    @Test
+    public void numberOfNodesTest(){
+        assertEquals(4,tree.numberOfNodes());
+    }
+
+    @Test
+    public void crossoverTest(){
+        CrossoverSubTree cross = new CrossoverSubTree();
+        Node lNode = new Node(
+                new ContentConstant(3),
+                null,
+                null);
+        Node rNode = new Node(
+                new ContentFunctionPlus('+'),
+                new Node(
+                        new ContentConstant(6),
+                        null,
+                        null),
+                new Node(
+                        new ContentConstant(4),
+                        null,
+                        null)
+        );
+        Node root = new Node(
+                new ContentFunctionTimes('*'),
+                lNode,
+                rNode);
+        Tree anotherTree = new Tree(root);
+        cross.setRandomSeed(128);
+        Tree result = cross.crossover(tree,anotherTree);
+        assertEquals("4.0+6.0+4.0*2.0",result.print());
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

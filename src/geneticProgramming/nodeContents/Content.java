@@ -1,4 +1,6 @@
-package geneticProgramming;
+package geneticProgramming.nodeContents;
+
+import geneticProgramming.structure.Node;
 
 public abstract class Content {
     protected Node ownerNode;

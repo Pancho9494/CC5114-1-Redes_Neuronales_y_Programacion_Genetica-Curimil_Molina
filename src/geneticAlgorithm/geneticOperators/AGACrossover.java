@@ -9,7 +9,7 @@ import java.util.Random;
  * This class represents one of the variations of the crossover genetic operation
  * These classes are given as a parameter to the genetic algorithm engine to use the corresponding crossover operation
  */
-public abstract class ACrossover {
+public abstract class AGACrossover {
     Random random = new Random();
 
     /**

@@ -1,4 +1,6 @@
-package geneticProgramming;
+package geneticProgramming.structure;
+
+import geneticProgramming.nodeContents.Visitor;
 
 public class Tree {
     private Node rootNode;
@@ -57,36 +59,78 @@ public class Tree {
         return out;
     }
 
-    public Tree replaceSubTree(Tree newSubTree, int index){
-        Tree copy = this.copyTree();
-        Node currentNode = copy.getRoot();
-        Node previous = copy.getRoot();
-        while (index + 1> 0){
-            // No more nodes to look for
-            if (currentNode == null){
-                return null;
-            }
+    public int numberOfNodes(){
+        int count = 0;
+        Node currentNode = rootNode;
+        Node previous = rootNode;
+        while (currentNode != null){
             // Look through left node
-            else if (currentNode.getLeft() != null){
+            if (currentNode.getLeft() != null){
                 previous = currentNode;
                 currentNode = currentNode.getLeft();
-                index--;
+                count++;
             }
             // Look through right node
             else if (currentNode.getRight() != null){
                 previous = currentNode;
                 currentNode = currentNode.getRight();
+                count++;
+            }
+            // Current node is a leaf, go back to right node
+            else{
+                if (previous.getRight() == currentNode){
+                    break;
+                }
+                currentNode = previous.getRight();
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public Node getNodeAt(Node currentNode, Node previousNode, int index){
+        while (index + 1> 0){
+            // No more nodes to look for
+            if (currentNode == null){
+                break;
+            }
+            // Look through left node
+            else if (currentNode.getLeft() != null){
+                previousNode = currentNode;
+                currentNode = currentNode.getLeft();
+                index--;
+            }
+            // Look through right node
+            else if (currentNode.getRight() != null){
+                previousNode = currentNode;
+                currentNode = currentNode.getRight();
                 index--;
             }
             // Current node is a leaf, go back to right node
             else{
-                currentNode = previous.getRight();
+                currentNode = previousNode.getRight();
                 index--;
             }
         }
+        return currentNode;
+    }
+
+    public Tree replaceSubTree(Tree newSubTree, int index){
+        Tree copy = this.copyTree();
+        Node currentNode = copy.getRoot();
+        Node previous = copy.getRoot();
+        currentNode = getNodeAt(currentNode, previous,index);
         currentNode.setContent(newSubTree.getRoot().value());
         currentNode.setLeft(newSubTree.getRoot().getLeft());
         currentNode.setRight(newSubTree.getRoot().getRight());
         return copy;
     }
+
+    public Tree extractSubTree(int index){
+        Node currentNode = rootNode;
+        Node previous = rootNode;
+        currentNode = getNodeAt(currentNode, previous,index);
+        return new Tree(currentNode);
+    }
+
 }

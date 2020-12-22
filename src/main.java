@@ -9,10 +9,8 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.tc33.jheatchart.HeatChart;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -76,7 +74,7 @@ public class main extends Application {
         IndividualFactory factory = new NQueenFactory();
         geneticAlg.setIndividualFactory(factory);
         FitnessFunctions fit = new FitnessNQueens(new IndividualNull(nqueens),factory);
-        ACrossover cross = new CrossoverOrdered();
+        AGACrossover cross = new CrossoverOrdered();
         AMutation mutation = new MutationFillBoard();
 
 
@@ -98,7 +96,7 @@ public class main extends Application {
         ArrayList<Double> mutationRate = new ArrayList<>(Arrays.asList(0.2,0.6,0.9));
         ArrayList<Integer> populationSize = new ArrayList<>(Arrays.asList(1000,2000,2500));
         ArrayList<Integer> selectionWindowSize = new ArrayList<>(Arrays.asList(5 ,25,50));
-        ArrayList<ACrossover> crossover = new ArrayList<ACrossover>(Arrays.asList(new Crossover(),
+        ArrayList<AGACrossover> crossover = new ArrayList<AGACrossover>(Arrays.asList(new Crossover(),
                                                             new CrossoverKeepSame(), new CrossoverOrdered()));
         double[][] zValues = new double[3][5];
 
@@ -143,7 +141,7 @@ public class main extends Application {
 
             zValues[selectionWindowSize.indexOf(windSize)][3] = geneticAlg.getCurrentBestFitness();
         }
-        for (ACrossover cross: crossover){
+        for (AGACrossover cross: crossover){
             Engine geneticAlg = new Engine();
             IndividualFactory factory = new NQueenFactory();
             geneticAlg.setIndividualFactory(factory);

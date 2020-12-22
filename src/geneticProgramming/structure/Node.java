@@ -1,4 +1,7 @@
-package geneticProgramming;
+package geneticProgramming.structure;
+
+import geneticProgramming.nodeContents.Content;
+import geneticProgramming.nodeContents.Visitor;
 
 public class Node {
     private Content content;

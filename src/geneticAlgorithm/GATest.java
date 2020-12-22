@@ -195,7 +195,7 @@ public class GATest {
 
     @Test
     public void orderedCrossoverTest(){
-        ACrossover cross = new CrossoverOrdered();
+        AGACrossover cross = new CrossoverOrdered();
         IndividualFactory fact = new WordFactory();
         Individual parent1 = stringToIndividual("table");
         Individual parent2 = stringToIndividual("chair");

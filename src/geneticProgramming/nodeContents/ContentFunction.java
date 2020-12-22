@@ -1,4 +1,4 @@
-package geneticProgramming;
+package geneticProgramming.nodeContents;
 
 public abstract class ContentFunction extends Content {
     private char content;

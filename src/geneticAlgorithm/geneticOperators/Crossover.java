@@ -6,7 +6,7 @@ import geneticAlgorithm.Individuals.Individual;
 /**
  * This class represents the standard crossover operation
  */
-public class Crossover extends ACrossover {
+public class Crossover extends AGACrossover {
 
     /**
      * A random index is chosen to make a cut
