@@ -79,7 +79,7 @@ public class GPEngine {
         double worstResult = Double.MAX_VALUE;
         for (int i = 0; i < population.size(); i ++ ){
             double fit = fitness.evaluate(population.get(i));
-            if (fit == fitness.getTarget()){
+            if (fit - fitness.getTarget() < 0.1){
                 this.currentBest = population.get(i);
                 this.currentBestFitness = fitness.evaluate(population.get(i));
                 bestFitnessHistory.add(currentBestFitness);
@@ -115,7 +115,7 @@ public class GPEngine {
                                        AGPCrossover crossover, AGPMutation mutation){
         this.crossover = crossover;
         this.mutation = mutation;
-        population = generateTrees(populationSize, maxDepth);
+        population = generateTrees(populationSize, maxDepth, false);
         setMutationRate(mutationRate);
         setFitness(fitness);
         setSelectionWindowSize(selectionWindowSize);
@@ -165,8 +165,7 @@ public class GPEngine {
      * @param populationSize amount of Trees to be generated
      * @return ArrayList containing the resulting Trees
      */
-    public ArrayList<Tree> generateTrees(int populationSize, int maxDepth){
-        Random random = new Random();
+    public ArrayList<Tree> generateTrees(int populationSize, int maxDepth, boolean randomOrder){
         // Create empty arrays for each generation
         ArrayList<ArrayList<Tree>> allTrees = new ArrayList<>();
         ArrayList<ContentFunction> functions = new ArrayList<>();
@@ -174,46 +173,28 @@ public class GPEngine {
             ArrayList<Tree> trees = new ArrayList<>();
             allTrees.add(trees);
         }
-        // Fill the first iteration arrays with random constants and the functions
+        // Fill the first iteration arrays with the algebraic operators and the numbers provided by the user
         functions.add(new ContentFunctionPlus('+'));
         functions.add(new ContentFunctionMinus('-'));
         functions.add(new ContentFunctionTimes('*'));
         functions.add(new ContentFunctionDivided('/'));
-        // This is for generating a random set of numbers
-//        int maxConst = 5;
-//        int minConst = -5;
-//        int extra = 10;
-//        for (int i = 0; i < populationSize + extra; i ++){
-//            Node aNode = new Node(
-//                    new ContentConstant(random.nextInt(maxConst - minConst) + minConst),
-//                    null,
-//                    null);
-//            Tree aTree = new Tree(aNode);
-//            allTrees.get(0).add(aTree);
-//        }
-        // This is for using the random set of numbers provided by the user
         for (int i = 0; i < inputNumbers.size(); i ++){
+            ContentConstant constant = null;
+            if (randomOrder){
+                constant = new ContentConstant(inputNumbers.get(random.nextInt(inputNumbers.size())));
+            }
+            else{
+                constant = new ContentConstant(inputNumbers.get(i));
+            }
             Node aNode = new Node(
-                    new ContentConstant(inputNumbers.get(i)),
+                    constant,
                     null,
                     null);
             Tree aTree = new Tree(aNode);
             allTrees.get(0).add(aTree);
         }
         // Iterate to generate random Trees
-//        int temp = populationSize;
         for (int i = 1; i < maxDepth; i++){
-            // Larger pool for initial constants
-            // This if is bad, needs to be changed
-//            if (i == 1){
-////                populationSize = populationSize + extra;
-//                populationSize = inputNumbers.size();
-//            }
-//            else{
-//                populationSize = temp;
-////                temp = populationSize + extra;
-//                temp = inputNumbers.size();
-//            }
             for (int j = 0; j < populationSize; j ++){
                 // Indices of parents and operator
                 int p1 = random.nextInt(populationSize);
@@ -232,7 +213,6 @@ public class GPEngine {
             }
         }
         // Choose randomly a tree that doesn't exceed the maxDepth
-//        Tree chosenTree = null;
         for (Tree tree: allTrees.get(maxDepth - 1)){
             if (tree.depth() > maxDepth){
                 return null;

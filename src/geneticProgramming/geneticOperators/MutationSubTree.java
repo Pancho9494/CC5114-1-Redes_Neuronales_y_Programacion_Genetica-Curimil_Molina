@@ -21,7 +21,7 @@ public class MutationSubTree extends AGPMutation {
         Tree copy = original.copyTree();
         int MP = random.nextInt(copy.numberOfNodes());
         int depthNeeded = copy.extractSubTree(MP).depth();
-        Tree randomTree = engine.generateTrees(1,depthNeeded).get(0);
+        Tree randomTree = engine.generateTrees(1,depthNeeded, true).get(0);
         Tree out = copy.replaceSubTree(randomTree,MP);
         return out;
     }

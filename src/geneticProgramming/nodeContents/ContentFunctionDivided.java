@@ -21,6 +21,6 @@ public class ContentFunctionDivided extends ContentFunction{
     @Override
     public double accept(Visitor visitor, Node owner) {
         this.ownerNode = owner;
-        return visitor.forFunctionTimes(this.ownerNode);
+        return visitor.forFunctionDivided(this.ownerNode);
     }
 }

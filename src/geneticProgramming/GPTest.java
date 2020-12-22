@@ -159,7 +159,7 @@ public class GPTest {
         double mutRate = 0.5;
         GPEngine GP = new GPEngine(popSize, maxDepth, mutRate);
         GP.setInputNumbers(numbers);
-        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth);
+        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth, false);
 //        String out = null;
         for (int i = 0; i < 5; i++){
             assertTrue(population.get(i).depth() <= 3);
