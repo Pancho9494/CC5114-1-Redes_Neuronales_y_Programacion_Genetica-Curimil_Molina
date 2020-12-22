@@ -6,7 +6,7 @@ import geneticAlgorithm.Individuals.Individual;
 /**
  * This class represents a mutation that swaps two genes from an Individual
  */
-public class MutationSwap extends AMutation{
+public class MutationSwap extends AGAMutation {
 
     /**
      * Two random indices are chosen, these will be the swapped genes of the Individual

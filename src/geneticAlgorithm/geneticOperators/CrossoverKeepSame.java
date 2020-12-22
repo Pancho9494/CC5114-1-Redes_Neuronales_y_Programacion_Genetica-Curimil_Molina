@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * This class represents a crossover that only keeps the repeating genes in the parents
  */
-public class CrossoverKeepSame extends ACrossover {
+public class CrossoverKeepSame extends AGACrossover {
 
     /**
      * If the parents have genes with the same values in them, their indices are stored
