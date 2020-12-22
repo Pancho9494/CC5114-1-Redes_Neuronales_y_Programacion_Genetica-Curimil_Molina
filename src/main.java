@@ -35,13 +35,13 @@ public class main extends Application {
         numbers.add(9.0);
         numbers.add(3.0);
         numbers.add(6.0);
-        GPEngine GP = new GPEngine(6,3, 0.5);
+        GPEngine GP = new GPEngine(6,3, 0.3);
         GP.setInputNumbers(numbers);
         GPFitness fit = new GPFitness();
         fit.setTarget(target);
         CrossoverSubTree cross = new CrossoverSubTree();
         MutationSubTree mutate = new MutationSubTree(GP);
-        Tree result = GP.executeAlgorithm(100,0.5,6,
+        Tree result = GP.executeAlgorithm(100,0.3,6,
                 3,5,fit,cross,mutate);
         System.out.println(result.print());
         System.out.println(result.evaluate());

@@ -14,8 +14,13 @@ public class ContentFunctionMinus extends ContentFunction{
     }
 
     @Override
-    public double accept(Visitor visitor, Node owner) {
+    public double acceptEvaluation(EvaluationVisitor evaluationVisitor, Node owner) {
         this.ownerNode = owner;
-        return visitor.forFunctionMinus(this.ownerNode);
+        return evaluationVisitor.forFunctionMinus(this.ownerNode);
+    }
+
+    @Override
+    public Content acceptCopy(CopyVisitor copyVisitor) {
+        return copyVisitor.forFunctionMinus(this);
     }
 }

@@ -14,7 +14,7 @@ public class GPFitness {
     }
 
     public double evaluate(Tree test){
-        double diff = target - test.evaluate();
+        double diff = Math.abs(target - test.evaluate());
         return 1/(1 + diff);
     }
 }

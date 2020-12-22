@@ -28,9 +28,9 @@ public class GPTest {
 
     @Before
     public void setUp(){
-        four = new ContentConstant(4);
-        five = new ContentConstant(5);
-        two = new ContentConstant(2);
+        four = new ContentConstant(4,null);
+        five = new ContentConstant(5,null);
+        two = new ContentConstant(2,null);
         plus = new ContentFunctionPlus('+');
         times = new ContentFunctionTimes('*');
         Node lNode = new Node(four,
@@ -92,11 +92,11 @@ public class GPTest {
     @Test
     public void replaceTest(){
         Node lNode = new Node(
-                new ContentConstant(3),
+                new ContentConstant(3,null),
                 null,
                 null);
         Node rNode = new Node(
-                new ContentConstant(4),
+                new ContentConstant(4,null),
                 null,
                 null);
         Node root = new Node(
@@ -123,17 +123,17 @@ public class GPTest {
     public void crossoverTest(){
         CrossoverSubTree cross = new CrossoverSubTree();
         Node lNode = new Node(
-                new ContentConstant(3),
+                new ContentConstant(3,null),
                 null,
                 null);
         Node rNode = new Node(
                 new ContentFunctionPlus('+'),
                 new Node(
-                        new ContentConstant(6),
+                        new ContentConstant(6,null),
                         null,
                         null),
                 new Node(
-                        new ContentConstant(4),
+                        new ContentConstant(4,null),
                         null,
                         null)
         );

@@ -1,13 +1,11 @@
 package geneticProgramming;
 
-import geneticAlgorithm.Individuals.Individual;
-import geneticAlgorithm.fitness.FitnessFunctions;
-import geneticAlgorithm.geneticOperators.AGACrossover;
-import geneticAlgorithm.geneticOperators.AGAMutation;
 import geneticProgramming.fitness.GPFitness;
 import geneticProgramming.geneticOperators.AGPCrossover;
 import geneticProgramming.geneticOperators.AGPMutation;
 import geneticProgramming.nodeContents.*;
+import geneticProgramming.nodeContents.factory.constants.ConstantFactory;
+import geneticProgramming.nodeContents.factory.functions.*;
 import geneticProgramming.structure.Node;
 import geneticProgramming.structure.Tree;
 
@@ -33,6 +31,7 @@ public class GPEngine {
     private ArrayList<Double> worstFitnessHistory = new ArrayList<>();
     private ArrayList<Double> meanFitnessHistory = new ArrayList<>();
     private int currentGeneration;
+    private IContentFunctionFactory contentFactory;
 
 
     public GPEngine(int populationSize, int maxDepth, double mutationRate){
@@ -79,7 +78,7 @@ public class GPEngine {
         double worstResult = Double.MAX_VALUE;
         for (int i = 0; i < population.size(); i ++ ){
             double fit = fitness.evaluate(population.get(i));
-            if (fit - fitness.getTarget() < 0.1){
+            if (Math.abs(fitness.getTarget() - fit) < 0.00001){
                 this.currentBest = population.get(i);
                 this.currentBestFitness = fitness.evaluate(population.get(i));
                 bestFitnessHistory.add(currentBestFitness);
@@ -168,28 +167,28 @@ public class GPEngine {
     public ArrayList<Tree> generateTrees(int populationSize, int maxDepth, boolean randomOrder){
         // Create empty arrays for each generation
         ArrayList<ArrayList<Tree>> allTrees = new ArrayList<>();
-        ArrayList<ContentFunction> functions = new ArrayList<>();
+        ArrayList<ContentFunctionFactory> functions = new ArrayList<>();
         for (int i = 0; i < maxDepth; i ++){
             ArrayList<Tree> trees = new ArrayList<>();
             allTrees.add(trees);
         }
         // Fill the first iteration arrays with the algebraic operators and the numbers provided by the user
-        functions.add(new ContentFunctionPlus('+'));
-        functions.add(new ContentFunctionMinus('-'));
-        functions.add(new ContentFunctionTimes('*'));
-        functions.add(new ContentFunctionDivided('/'));
+        functions.add(new PlusFunctionFactory());
+        functions.add(new MinusFunctionFactory());
+        functions.add(new TimesFunctionFactory());
+        functions.add(new DividedFunctionFactory());
+        ConstantFactory constFactory = new ConstantFactory();
+        // Create the initial leaves
         for (int i = 0; i < inputNumbers.size(); i ++){
-            ContentConstant constant = null;
+            Content constant = null;
+            Node aNode = new Node(null, null, null);
             if (randomOrder){
-                constant = new ContentConstant(inputNumbers.get(random.nextInt(inputNumbers.size())));
+                constant = constFactory.create(inputNumbers.get(random.nextInt(inputNumbers.size())), aNode);
             }
             else{
-                constant = new ContentConstant(inputNumbers.get(i));
+                constant = constFactory.create(inputNumbers.get(i),aNode);
             }
-            Node aNode = new Node(
-                    constant,
-                    null,
-                    null);
+            aNode.setContent(constant);
             Tree aTree = new Tree(aNode);
             allTrees.get(0).add(aTree);
         }
@@ -203,12 +202,14 @@ public class GPEngine {
                     p2 = random.nextInt(populationSize);
                 }
                 int op = random.nextInt(3);
+
                 // Create new Tree
-                Node rNode = new Node(
-                        functions.get(op),
-                        allTrees.get(i-1).get(p1).getRoot(),
-                        allTrees.get(i-1).get(p2).getRoot()
-                );
+                Node rNode = new Node(null,null,null);
+
+                rNode.setContent(functions.get(op).create(rNode));
+                rNode.setLeft(allTrees.get(i - 1).get(p1).getRoot().copy());
+                rNode.setRight(allTrees.get(i - 1).get(p2).getRoot().copy());
+
                 allTrees.get(i).add(new Tree(rNode));
             }
         }

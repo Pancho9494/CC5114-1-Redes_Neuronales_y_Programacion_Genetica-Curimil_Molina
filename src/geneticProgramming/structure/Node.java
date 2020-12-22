@@ -1,7 +1,8 @@
 package geneticProgramming.structure;
 
 import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.Visitor;
+import geneticProgramming.nodeContents.CopyVisitor;
+import geneticProgramming.nodeContents.EvaluationVisitor;
 
 public class Node {
     private Content content;
@@ -43,11 +44,17 @@ public class Node {
         return content;
     }
 
-    public double accept(Visitor visitor){
-        return this.content.accept(visitor, this);
+    public double acceptEvaluation(EvaluationVisitor evaluationVisitor){
+        return this.content.acceptEvaluation(evaluationVisitor, this);
     }
 
     public Node copy(){
-        return new Node(this.content, this.left, this.right);
+        CopyVisitor copyVisitor = new CopyVisitor();
+        if (left != null & right != null){
+            return new Node(this.content.acceptCopy(copyVisitor), this.left.copy(), this.right.copy());
+        }
+        else{
+            return new Node(this.content.acceptCopy(copyVisitor), this.left, this.right);
+        }
     }
 }
