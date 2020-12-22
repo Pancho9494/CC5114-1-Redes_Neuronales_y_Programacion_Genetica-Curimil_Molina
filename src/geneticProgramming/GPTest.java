@@ -46,7 +46,7 @@ public class GPTest {
         root = new Node(plus, lNode, rNode);
         tree = new Tree(root);
 
-        numbers.add(1.0);
+        numbers.add(11.0);
         numbers.add(2.0);
         numbers.add(3.0);
         numbers.add(4.0);
@@ -171,8 +171,10 @@ public class GPTest {
     public void mutationTest(){
         GPEngine GP = new GPEngine(5,3,0.5);
         GP.setInputNumbers(numbers);
+        System.out.print("Original= "+tree.print()+"\n");
         MutationSubTree mut = new MutationSubTree(GP);
         Tree result = mut.mutate(tree);
+        System.out.print("Mutate= "+result.print());
         assertTrue(result.depth() <= 3);
     }
 }
