@@ -6,7 +6,7 @@ import geneticAlgorithm.Individuals.Individual;
 /**
  * This class represents the standard mutation operation
  */
-public class Mutation extends AMutation {
+public class Mutation extends AGAMutation {
 
     /**
      * A number between 0 and 1 is rolled, if its greater than the mutation rate then the mutation happens

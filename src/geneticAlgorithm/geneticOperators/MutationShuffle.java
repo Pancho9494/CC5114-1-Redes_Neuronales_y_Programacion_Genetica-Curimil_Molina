@@ -9,7 +9,7 @@ import java.util.Collections;
 /**
  * This class represents a mutation that just reorders genes in an individual
  */
-public class MutationShuffle extends AMutation {
+public class MutationShuffle extends AGAMutation {
 
     /**
      * The genes of the Individual ar shuffled and then returned

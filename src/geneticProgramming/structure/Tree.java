@@ -1,6 +1,10 @@
 package geneticProgramming.structure;
 
+import geneticProgramming.nodeContents.*;
 import geneticProgramming.nodeContents.Visitor;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Tree {
     private Node rootNode;
@@ -88,6 +92,34 @@ public class Tree {
         return count;
     }
 
+    public int depth(){
+        int count = 1;
+        Node currentNode = rootNode;
+        Node previous = rootNode;
+        while (currentNode != null){
+            // Look through left node
+            if (currentNode.getLeft() != null){
+                previous = currentNode;
+                currentNode = currentNode.getLeft();
+                count++;
+            }
+            // Look through right node
+            else if (currentNode.getRight() != null){
+                previous = currentNode;
+                currentNode = currentNode.getRight();
+                count++;
+            }
+            // Current node is a leaf, go back to right node
+            else{
+                if (previous.getRight() == currentNode){
+                    break;
+                }
+                currentNode = previous.getRight();
+            }
+        }
+        return count;
+    }
+
     public Node getNodeAt(Node currentNode, Node previousNode, int index){
         while (index + 1> 0){
             // No more nodes to look for
@@ -132,5 +164,6 @@ public class Tree {
         currentNode = getNodeAt(currentNode, previous,index);
         return new Tree(currentNode);
     }
+
 
 }

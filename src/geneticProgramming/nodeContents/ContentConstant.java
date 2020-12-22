@@ -5,7 +5,7 @@ import geneticProgramming.structure.Node;
 public class ContentConstant extends Content {
     private double content;
 
-    public ContentConstant(int content){
+    public ContentConstant(double content){
         this.content = content;
     }
 

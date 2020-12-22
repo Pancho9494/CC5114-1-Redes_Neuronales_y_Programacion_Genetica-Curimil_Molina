@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * Currently this class only cares about rows and columns in the board but not diagonals, this could be added in the future
  */
-public class MutationFillBoard extends AMutation {
+public class MutationFillBoard extends AGAMutation {
 
     /**
      * There must be a more efficient way to do this, this will be revised in the future

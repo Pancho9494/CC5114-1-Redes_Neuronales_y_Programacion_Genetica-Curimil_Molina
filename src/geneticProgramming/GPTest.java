@@ -1,11 +1,7 @@
 package geneticProgramming;
 
-import geneticAlgorithm.Engine;
-import geneticAlgorithm.Individuals.Factory.IndividualFactory;
-import geneticAlgorithm.Individuals.Factory.WordFactory;
-import geneticAlgorithm.Individuals.Individual;
-import geneticAlgorithm.geneticOperators.Crossover;
 import geneticProgramming.geneticOperators.CrossoverSubTree;
+import geneticProgramming.geneticOperators.MutationSubTree;
 import geneticProgramming.nodeContents.ContentConstant;
 import geneticProgramming.nodeContents.ContentFunction;
 import geneticProgramming.nodeContents.ContentFunctionPlus;
@@ -15,10 +11,13 @@ import geneticProgramming.structure.Tree;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 public class GPTest {
+    ArrayList<Double> numbers = new ArrayList<>();
     ContentConstant four;
     ContentConstant five;
     ContentConstant two;
@@ -46,6 +45,17 @@ public class GPTest {
                         null));
         root = new Node(plus, lNode, rNode);
         tree = new Tree(root);
+
+        numbers.add(1.0);
+        numbers.add(2.0);
+        numbers.add(3.0);
+        numbers.add(4.0);
+        numbers.add(5.0);
+        numbers.add(6.0);
+        numbers.add(7.0);
+        numbers.add(8.0);
+        numbers.add(9.0);
+        numbers.add(10.0);
     }
 
     @Test
@@ -135,6 +145,35 @@ public class GPTest {
         cross.setRandomSeed(128);
         Tree result = cross.crossover(tree,anotherTree);
         assertEquals("4.0+6.0+4.0*2.0",result.print());
+    }
+
+    @Test
+    public void depthTest(){
+        assertEquals(3, tree.depth());
+    }
+
+    @Test
+    public void generateTrees(){
+        int popSize = 5;
+        int maxDepth = 3;
+        double mutRate = 0.5;
+        GPEngine GP = new GPEngine(popSize, maxDepth, mutRate);
+        GP.setInputNumbers(numbers);
+        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth);
+//        String out = null;
+        for (int i = 0; i < 5; i++){
+            assertTrue(population.get(i).depth() <= 3);
+//            out = population.get(i).print();
+        }
+    }
+
+    @Test
+    public void mutationTest(){
+        GPEngine GP = new GPEngine(5,3,0.5);
+        GP.setInputNumbers(numbers);
+        MutationSubTree mut = new MutationSubTree(GP);
+        Tree result = mut.mutate(tree);
+        assertTrue(result.depth() <= 3);
     }
 }
 

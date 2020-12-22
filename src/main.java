@@ -4,6 +4,12 @@ import geneticAlgorithm.fitness.*;
 import geneticAlgorithm.Individuals.Factory.*;
 import geneticAlgorithm.geneticOperators.*;
 
+import geneticProgramming.GPEngine;
+import geneticProgramming.fitness.GPFitness;
+import geneticProgramming.geneticOperators.AGPCrossover;
+import geneticProgramming.geneticOperators.CrossoverSubTree;
+import geneticProgramming.geneticOperators.MutationSubTree;
+import geneticProgramming.structure.Tree;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -20,20 +26,37 @@ public class main extends Application {
     public static void main(String[] args) {
 //        wordFinder("paralelepipedo");
 //        binaryFinder(121);
-        nQueenFinder(5);
+//        nQueenFinder(5);
+        double target = 459.0;
+        ArrayList<Double> numbers = new ArrayList<>();
+        numbers.add(25.0);
+        numbers.add(7.0);
+        numbers.add(8.0);
+        numbers.add(100.0);
+        numbers.add(4.0);
+        numbers.add(2.0);
+        GPEngine GP = new GPEngine(6,3, 0.5);
+        GP.setInputNumbers(numbers);
+        GPFitness fit = new GPFitness();
+        fit.setTarget(target);
+        CrossoverSubTree cross = new CrossoverSubTree();
+        MutationSubTree mutate = new MutationSubTree(GP);
+        Tree result = GP.executeAlgorithm(100,0.5,6,
+                3,5,fit,cross,mutate);
+        System.out.println(result.print());
     }
 
     public static void wordFinder(String input){
         String word = input;
-        Engine geneticAlg = new Engine();
+        GAEngine geneticAlg = new GAEngine();
         IndividualFactory factory = new WordFactory();
         geneticAlg.setIndividualFactory(factory);
         FitnessMatchWords fit = new FitnessMatchWords(word, factory);
         Crossover cross = new Crossover();
-        AMutation mutate = new Mutation();
+        AGAMutation mutate = new Mutation();
         demo = new FXGA();
         demo.setTarget(fit.transformInput(word));
-        demo.setEngine(geneticAlg);
+        demo.setGAEngine(geneticAlg);
         demo.setChess(false);
 
 
@@ -48,15 +71,15 @@ public class main extends Application {
 
     public static void binaryFinder(int input){
         int number = input;
-        Engine geneticAlg = new Engine();
+        GAEngine geneticAlg = new GAEngine();
         IndividualFactory factory = new BinaryFactory();
         geneticAlg.setIndividualFactory(factory);
         FitnessBinary fit = new FitnessBinary(number, factory);
         Crossover cross = new Crossover();
-        AMutation mutate = new Mutation();
+        AGAMutation mutate = new Mutation();
         demo = new FXGA();
         demo.setTarget(fit.transformInput(number));
-        demo.setEngine(geneticAlg);
+        demo.setGAEngine(geneticAlg);
         demo.setChess(false);
 
         geneticAlg.executeAlgorithm(100,0.4,25,
@@ -70,19 +93,19 @@ public class main extends Application {
 
     public static void nQueenFinder(int size){
         int nqueens = size;
-        Engine geneticAlg = new Engine();
+        GAEngine geneticAlg = new GAEngine();
         IndividualFactory factory = new NQueenFactory();
         geneticAlg.setIndividualFactory(factory);
         FitnessFunctions fit = new FitnessNQueens(new IndividualNull(nqueens),factory);
         AGACrossover cross = new CrossoverOrdered();
-        AMutation mutation = new MutationFillBoard();
+        AGAMutation mutation = new MutationFillBoard();
 
 
         geneticAlg.executeAlgorithm(2000, 0.6, 1000,
                 nqueens,25,fit,cross, mutation);
 
         demo = new FXGA();
-        demo.setEngine(geneticAlg);
+        demo.setGAEngine(geneticAlg);
         demo.setChess(true);
 
         demo.setUpData(geneticAlg.getBestFitnessHistory(), geneticAlg.getWorstFitnessHistory(),
@@ -102,7 +125,7 @@ public class main extends Application {
 
         int fixedQueens = 11;
         for (int maxGen: maxGenerations){
-            Engine geneticAlg = new Engine();
+            GAEngine geneticAlg = new GAEngine();
             IndividualFactory factory = new NQueenFactory();
             geneticAlg.setIndividualFactory(factory);
 
@@ -112,7 +135,7 @@ public class main extends Application {
             zValues[maxGenerations.indexOf(maxGen)][0] = geneticAlg.getCurrentBestFitness();
         }
         for (double mutRate: mutationRate){
-            Engine geneticAlg = new Engine();
+            GAEngine geneticAlg = new GAEngine();
             IndividualFactory factory = new NQueenFactory();
             geneticAlg.setIndividualFactory(factory);
 
@@ -122,7 +145,7 @@ public class main extends Application {
             zValues[mutationRate.indexOf(mutRate)][1] = geneticAlg.getCurrentBestFitness();
         }
         for (int popSize: populationSize){
-            Engine geneticAlg = new Engine();
+            GAEngine geneticAlg = new GAEngine();
             IndividualFactory factory = new NQueenFactory();
             geneticAlg.setIndividualFactory(factory);
 
@@ -132,7 +155,7 @@ public class main extends Application {
             zValues[populationSize.indexOf(popSize)][2] = geneticAlg.getCurrentBestFitness();
         }
         for (int windSize: selectionWindowSize){
-            Engine geneticAlg = new Engine();
+            GAEngine geneticAlg = new GAEngine();
             IndividualFactory factory = new NQueenFactory();
             geneticAlg.setIndividualFactory(factory);
 
@@ -142,7 +165,7 @@ public class main extends Application {
             zValues[selectionWindowSize.indexOf(windSize)][3] = geneticAlg.getCurrentBestFitness();
         }
         for (AGACrossover cross: crossover){
-            Engine geneticAlg = new Engine();
+            GAEngine geneticAlg = new GAEngine();
             IndividualFactory factory = new NQueenFactory();
             geneticAlg.setIndividualFactory(factory);
 

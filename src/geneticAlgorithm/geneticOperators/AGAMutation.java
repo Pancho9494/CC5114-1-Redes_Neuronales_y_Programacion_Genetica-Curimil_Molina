@@ -9,7 +9,7 @@ import java.util.Random;
  * This class represents one of the variations of the mutation genetic operator
  * These classes are given as a parameter to the genetic algorithm engine to use the corresponding mutate operation
  */
-public abstract class AMutation {
+public abstract class AGAMutation {
     Random random = new Random();
 
     /**

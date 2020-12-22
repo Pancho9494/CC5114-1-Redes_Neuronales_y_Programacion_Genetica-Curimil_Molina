@@ -11,7 +11,7 @@ import java.util.Random;
  * This class represents a genetic algorithm engine
  * It provides the tools required to set up the algorithm and to execute it
  */
-public class Engine {
+public class GAEngine {
     private Random random = new Random();
     private ArrayList<Individual> population = new ArrayList<>();
     private ArrayList<Integer> bestFitnessHistory = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Engine {
     private Individual currentWorst;
     private IIndividualFactory individualFactory;
     private AGACrossover crossover;
-    private AMutation mutation;
+    private AGAMutation mutation;
     private double mutationRate = 0.2;
     private int selectionWindowSize = 5;
     private int currentGeneration;
@@ -160,7 +160,7 @@ public class Engine {
      */
     public Individual executeAlgorithm(int maxGenerations, double mutationRate, int populationSize,
                                        int numberOfGenes, int selectionWindowSize, FitnessFunctions fitness,
-                                       AGACrossover crossover, AMutation mutation){
+                                       AGACrossover crossover, AGAMutation mutation){
         this.crossover = crossover;
         this.mutation = mutation;
         initializePopulation(populationSize, numberOfGenes);
@@ -216,7 +216,7 @@ public class Engine {
      * Mainly used in Tests
      * @return the Mutation genetic operator
      */
-    public AMutation getMutation() {
+    public AGAMutation getMutation() {
         return mutation;
     }
 

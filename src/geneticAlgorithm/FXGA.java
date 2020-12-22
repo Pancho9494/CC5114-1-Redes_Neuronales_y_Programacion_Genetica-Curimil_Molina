@@ -2,7 +2,6 @@ package geneticAlgorithm;
 
 import geneticAlgorithm.Individuals.Individual;
 import geneticAlgorithm.specialObjects.Queen;
-import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
@@ -19,7 +18,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -48,11 +46,11 @@ public class FXGA extends FXPlotter {
         title.setLayoutX(xCenter - 10);
         title.setLayoutY(yCenter - 5);
 
-        Label bestIndividual = new Label(  "Best Individual:    " + engine.getCurrentBest().chromosomeToString());
+        Label bestIndividual = new Label(  "Best Individual:    " + GAEngine.getCurrentBest().chromosomeToString());
         bestIndividual.setLayoutX(30);
         bestIndividual.setLayoutY(yCenter + 40 + vSpacing);
 
-        Label bestFitness = new Label("Best Fitness:         " + engine.getCurrentBestFitness());
+        Label bestFitness = new Label("Best Fitness:         " + GAEngine.getCurrentBestFitness());
         bestFitness.setLayoutX(30);
         bestFitness.setLayoutY(yCenter + 40 + vSpacing*2);
 
@@ -69,7 +67,7 @@ public class FXGA extends FXPlotter {
             chessBoard.setFocusTraversable(false);
             chessBoard.setOnAction(event -> {
             try {
-                makeBoard(engine.getCurrentBest().getNumberOfGenes());
+                makeBoard(GAEngine.getCurrentBest().getNumberOfGenes());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -169,7 +167,7 @@ public class FXGA extends FXPlotter {
             }
         }
         ArrayList<Queen> positions = new ArrayList<>();
-        Individual best = engine.getCurrentBest();
+        Individual best = GAEngine.getCurrentBest();
         for (int i = 0; i < best.getNumberOfGenes(); i++) {
             positions.add((Queen) best.getGene(i));
         }
