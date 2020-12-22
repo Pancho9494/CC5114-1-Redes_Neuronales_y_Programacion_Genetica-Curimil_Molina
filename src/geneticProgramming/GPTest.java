@@ -64,4 +64,24 @@ public class GPTest {
     public void evaluateTest(){
         tree.evaluate();
     }
+
+
+    @Test
+    public void replaceTest(){
+        Node lNode = new Node(
+                new ContentConstant(3),
+                null,
+                null);
+        Node rNode = new Node(
+                new ContentConstant(4),
+                null,
+                null);
+        Node root = new Node(
+                new ContentFunctionTimes('*'),
+                lNode,
+                rNode);
+        Tree newSubTree = new Tree(root);
+        Tree newTree = tree.replaceSubTree(newSubTree, 0);
+        assertEquals("3.0*4.0+5.0*2.0", newTree.print());
+    }
 }

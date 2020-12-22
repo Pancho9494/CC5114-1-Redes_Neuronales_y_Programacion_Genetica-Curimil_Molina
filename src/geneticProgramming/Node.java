@@ -28,6 +28,10 @@ public class Node {
         this.right = right;
     }
 
+    public void setContent(Content content) {
+        this.content = content;
+    }
+
     public void setIndex(int index){
         this.index = index;
     }

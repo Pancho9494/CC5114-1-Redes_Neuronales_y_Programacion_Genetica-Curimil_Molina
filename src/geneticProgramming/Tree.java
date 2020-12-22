@@ -57,17 +57,36 @@ public class Tree {
         return out;
     }
 
-    public void replaceSubTree(Tree newSubTree, int index){
-        Node currentNode = rootNode;
-        while (index > 0){
-            if (currentNode.getLeft() != null){
+    public Tree replaceSubTree(Tree newSubTree, int index){
+        Tree copy = this.copyTree();
+        Node currentNode = copy.getRoot();
+        Node previous = copy.getRoot();
+        while (index + 1> 0){
+            // No more nodes to look for
+            if (currentNode == null){
+                return null;
+            }
+            // Look through left node
+            else if (currentNode.getLeft() != null){
+                previous = currentNode;
                 currentNode = currentNode.getLeft();
                 index--;
             }
+            // Look through right node
             else if (currentNode.getRight() != null){
+                previous = currentNode;
                 currentNode = currentNode.getRight();
                 index--;
             }
+            // Current node is a leaf, go back to right node
+            else{
+                currentNode = previous.getRight();
+                index--;
+            }
         }
+        currentNode.setContent(newSubTree.getRoot().value());
+        currentNode.setLeft(newSubTree.getRoot().getLeft());
+        currentNode.setRight(newSubTree.getRoot().getRight());
+        return copy;
     }
 }
