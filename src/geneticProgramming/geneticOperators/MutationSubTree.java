@@ -53,6 +53,9 @@ public class MutationSubTree extends AGPMutation {
             }
             ArrayList<Node> toBeRemoved = new ArrayList<>();
             for (Node dup: repeated){
+                if (available.size() == 0){
+                    break;
+                }
                 ConstantFactory contFact = new ConstantFactory();
                 double newValue = available.get(random.nextInt(available.size()));
                 dup.setContent(contFact.create(newValue, dup));

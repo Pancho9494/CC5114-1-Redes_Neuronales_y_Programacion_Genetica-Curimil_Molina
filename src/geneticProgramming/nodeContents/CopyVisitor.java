@@ -1,7 +1,5 @@
 package geneticProgramming.nodeContents;
 
-import geneticProgramming.structure.Node;
-
 public class CopyVisitor {
 
     public Content forConstant(Content cont){
@@ -29,6 +27,11 @@ public class CopyVisitor {
         return newDivided;
     }
 
+    public Content forVariable(Content cont, char identifier) {
+        ContentVariable newVariable = new ContentVariable(identifier);
+        newVariable.setContent(cont);
+        return newVariable;
+    }
 }
 
 

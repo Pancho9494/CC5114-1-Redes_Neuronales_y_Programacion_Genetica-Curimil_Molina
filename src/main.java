@@ -38,14 +38,14 @@ public class main extends Application {
         numbers.add(3.0);
         numbers.add(6.0);
 
-        GPEngine GP = new GPEngine(1000,3, 0.2);
+        GPEngine GP = new GPEngine(300,5, 0.2);
         GP.setInputNumbers(numbers);
         GPFitness fit = new GPFitness();
         fit.setTarget(target);
         CrossoverSubTree cross = new CrossoverSubTree(GP);
         MutationSubTree mutate = new MutationSubTree(GP);
 
-        Tree result = GP.executeAlgorithm(1000,25, fit,cross,mutate);
+        Tree result = GP.executeAlgorithm(200,25, fit,cross,mutate);
         System.out.println(result.print2());
         System.out.println(result.evaluate());
 

@@ -28,4 +28,8 @@ public class EvaluationVisitor {
             return node.getLeft().acceptEvaluation(this)/node.getRight().acceptEvaluation(this);
         }
     }
+
+    public double forVariable(Node node) {
+        return (double) node.value().getContent();
+    }
 }
