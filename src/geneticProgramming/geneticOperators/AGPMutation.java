@@ -6,8 +6,8 @@ import geneticProgramming.structure.Tree;
 import java.util.Random;
 
 public abstract class AGPMutation {
-    Random random = new Random();
-    GPEngine engine;
+    protected Random random = new Random();
+    protected GPEngine engine;
 
     public abstract Tree mutate(Tree original);
 }

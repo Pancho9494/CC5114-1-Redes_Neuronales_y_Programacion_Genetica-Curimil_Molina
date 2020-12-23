@@ -88,6 +88,29 @@ public class GPTest {
         tree.evaluate();
     }
 
+    @Test
+    public void getNodeAtTest(){
+        GPEngine GP = new GPEngine(4,3,0);
+        GP.setInputNumbers(numbers);
+        GP.setRandomSeed(42);
+        ArrayList<Tree> Trees = GP.generateTrees(4,3,false);
+        Tree test = Trees.get(0);
+
+        Tree one = test.extractSubTree(0);
+        Tree divided = test.extractSubTree(1);
+        Tree two0 = test.extractSubTree(2);
+        Tree two1 = test.extractSubTree(3);
+        Tree times = test.extractSubTree(4);
+        Tree three = test.extractSubTree(5);
+
+        assertEquals(1.0,one.getRoot().value().getContent());
+        assertEquals('/',divided.getRoot().value().getContent());
+        assertEquals(2.0,two0.getRoot().value().getContent());
+        assertEquals(2.0,two1.getRoot().value().getContent());
+        assertEquals('*',times.getRoot().value().getContent());
+        assertEquals(3.0,three.getRoot().value().getContent());
+
+    }
 
     @Test
     public void replaceTest(){
@@ -121,7 +144,9 @@ public class GPTest {
 
     @Test
     public void crossoverTest(){
-        CrossoverSubTree cross = new CrossoverSubTree();
+        for (int i = 0; i < 100; i ++){
+        GPEngine GP = new GPEngine(6,5,0.5);
+        CrossoverSubTree cross = new CrossoverSubTree(GP);
         Node lNode = new Node(
                 new ContentConstant(3,null),
                 null,
@@ -142,9 +167,9 @@ public class GPTest {
                 lNode,
                 rNode);
         Tree anotherTree = new Tree(root);
-        cross.setRandomSeed(128);
-        Tree result = cross.crossover(tree,anotherTree);
-        assertEquals("4.0+6.0+4.0*2.0",result.print());
+            Tree result = cross.crossover(tree,anotherTree);
+            assertTrue(result.depth() <= GP.getMaxDepth());
+        }
     }
 
     @Test
@@ -169,11 +194,13 @@ public class GPTest {
 
     @Test
     public void mutationTest(){
-        GPEngine GP = new GPEngine(5,3,0.5);
-        GP.setInputNumbers(numbers);
-        MutationSubTree mut = new MutationSubTree(GP);
-        Tree result = mut.mutate(tree);
-        assertTrue(result.depth() <= 3);
+        for (int i = 0; i < 100; i ++) {
+            GPEngine GP = new GPEngine(5, 5, 1);
+            GP.setInputNumbers(numbers);
+            MutationSubTree mut = new MutationSubTree(GP);
+            Tree result = mut.mutate(tree);
+            assertTrue(result.depth() <= 5);
+        }
     }
 }
 
