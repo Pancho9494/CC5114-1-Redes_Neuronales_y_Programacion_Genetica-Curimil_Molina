@@ -25,9 +25,4 @@ public abstract class ContentFunction extends Content {
     }
 
     public abstract double operate(Content op1, Content op2);
-
-    @Override
-    public String print() {
-        return String.valueOf(content);
-    }
 }

@@ -47,10 +47,6 @@ public class Tree {
         return out;
     }
 
-    public String print2() {
-        return rootNode.print();
-    }
-
     public Node nodeAt(int index){
         ArrayList<Node> inorder = inOrder();
         inorder.remove(rootNode);
