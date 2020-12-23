@@ -57,4 +57,16 @@ public class Node {
             return new Node(this.content.acceptCopy(copyVisitor), this.left, this.right);
         }
     }
+
+    public String print(){
+        String cont=content.print();
+        if(left==null){
+            return cont;
+        }
+        else {
+            String izq = left.print();
+            String der = right.print();
+            return "(" + izq + cont + der + ")";
+        }
+    }
 }
