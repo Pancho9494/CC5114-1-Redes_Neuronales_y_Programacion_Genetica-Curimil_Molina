@@ -2,11 +2,17 @@ package geneticProgramming.structure;
 
 import geneticProgramming.nodeContents.EvaluationVisitor;
 
+import java.util.ArrayList;
+
 public class Tree {
     private Node rootNode;
+    private String print;
+    private double score;
 
     public Tree(Node root) {
         this.rootNode = root;
+        this.print = print();
+        this.score = evaluate();
     }
 
     public Node getRoot() {
@@ -34,11 +40,26 @@ public class Tree {
      */
     public String print() {
         String out = "";
+        ArrayList<Node> inorder = inOrder();
+        for (Node node: inorder){
+            out = out.concat(String.valueOf(node.value().getContent()));
+        }
+        return out;
+    }
+
+    public Node nodeAt(int index){
+        ArrayList<Node> inorder = inOrder();
+        inorder.remove(rootNode);
+        return inorder.get(index);
+    }
+
+    public ArrayList<Node> inOrder(){
+        ArrayList<Node> out = new ArrayList<>();
         Node currentNode = rootNode;
         Node predecessor;
         while (currentNode != null) {
             if (currentNode.getLeft() == null) {
-                out = out.concat(String.valueOf(currentNode.value().getContent()));
+                out.add(currentNode);
                 currentNode = currentNode.getRight();
             } else {
                 predecessor = currentNode.getLeft();
@@ -51,7 +72,7 @@ public class Tree {
                 }
                 else {
                     predecessor.setRight(null);
-                    out = out.concat(String.valueOf(currentNode.value().getContent()));
+                    out.add(currentNode);
                     currentNode = currentNode.getRight();
                 }
             }
@@ -60,32 +81,8 @@ public class Tree {
     }
 
     public int numberOfNodes(){
-        int count = 0;
-        Node currentNode = rootNode;
-        Node previous = rootNode;
-        while (currentNode != null){
-            // Look through left node
-            if (currentNode.getLeft() != null){
-                previous = currentNode;
-                currentNode = currentNode.getLeft();
-                count++;
-            }
-            // Look through right node
-            else if (currentNode.getRight() != null){
-                previous = currentNode;
-                currentNode = currentNode.getRight();
-                count++;
-            }
-            // Current node is a leaf, go back to right node
-            else{
-                if (previous.getRight() == currentNode){
-                    break;
-                }
-                currentNode = previous.getRight();
-                count++;
-            }
-        }
-        return count;
+        ArrayList<Node> inorder = this.inOrder();
+        return inorder.size() - 1;
     }
 
     public int depth(){
@@ -116,49 +113,19 @@ public class Tree {
         return count;
     }
 
-    public Node getNodeAt(Node currentNode, Node previousNode, int index){
-        while (index + 1> 0){
-            // No more nodes to look for
-            if (currentNode == null){
-                break;
-            }
-            // Look through left node
-            else if (currentNode.getLeft() != null){
-                previousNode = currentNode;
-                currentNode = currentNode.getLeft();
-                index--;
-            }
-            // Look through right node
-            else if (currentNode.getRight() != null){
-                previousNode = currentNode;
-                currentNode = currentNode.getRight();
-                index--;
-            }
-            // Current node is a leaf, go back to right node
-            else{
-                currentNode = previousNode.getRight();
-                index--;
-            }
-        }
-        return currentNode;
-    }
 
     public Tree replaceSubTree(Tree newSubTree, int index){
-        Tree copy = this.copyTree();
-        Node currentNode = copy.getRoot();
-        Node previous = copy.getRoot();
-        currentNode = getNodeAt(currentNode, previous,index);
+        Node currentNode = this.nodeAt(index);
         currentNode.setContent(newSubTree.getRoot().value());
         currentNode.setLeft(newSubTree.getRoot().getLeft());
         currentNode.setRight(newSubTree.getRoot().getRight());
-        return copy;
+        this.print = print();
+        this.score = evaluate();
+        return this;
     }
 
     public Tree extractSubTree(int index){
-        Node currentNode = rootNode;
-        Node previous = rootNode;
-        currentNode = getNodeAt(currentNode, previous,index);
-        return new Tree(currentNode);
+        return new Tree(nodeAt(index));
     }
 
 

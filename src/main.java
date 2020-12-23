@@ -4,6 +4,7 @@ import geneticAlgorithm.fitness.*;
 import geneticAlgorithm.Individuals.Factory.*;
 import geneticAlgorithm.geneticOperators.*;
 
+import geneticProgramming.FXGP;
 import geneticProgramming.GPEngine;
 import geneticProgramming.fitness.GPFitness;
 import geneticProgramming.geneticOperators.AGPCrossover;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 
 public class main extends Application {
     private static FXGA demo;
+    private static FXGP demoGP;
 
     public static void main(String[] args) {
 //        wordFinder("paralelepipedo");
@@ -35,16 +37,24 @@ public class main extends Application {
         numbers.add(9.0);
         numbers.add(3.0);
         numbers.add(6.0);
-        GPEngine GP = new GPEngine(6,3, 0.3);
+
+        GPEngine GP = new GPEngine(250,4, 0.4);
         GP.setInputNumbers(numbers);
         GPFitness fit = new GPFitness();
         fit.setTarget(target);
-        CrossoverSubTree cross = new CrossoverSubTree();
+        CrossoverSubTree cross = new CrossoverSubTree(GP);
         MutationSubTree mutate = new MutationSubTree(GP);
-        Tree result = GP.executeAlgorithm(100,0.3,6,
-                3,5,fit,cross,mutate);
+
+        Tree result = GP.executeAlgorithm(100,25, fit,cross,mutate);
         System.out.println(result.print());
         System.out.println(result.evaluate());
+
+        demoGP = new FXGP();
+        demoGP.setGPEngine(GP);
+        demoGP.setUpData(GP.getBestFitnessHistory(), GP.getWorstFitnessHistory(),
+                GP.getMeanFitnessHistory());
+        demoGP.launch();
+        Platform.exit();
     }
 
     public static void wordFinder(String input){
@@ -192,7 +202,8 @@ public class main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        demo.begin(stage);
+//        demo.begin(stage);
+        demoGP.begin(stage);
     }
 
 }
