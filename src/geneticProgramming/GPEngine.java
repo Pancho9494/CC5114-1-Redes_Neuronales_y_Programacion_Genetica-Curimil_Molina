@@ -1,9 +1,11 @@
 package geneticProgramming;
 
-import geneticProgramming.fitness.GPFitness;
+import geneticProgramming.fitness.ChiffLettFitness;
+import geneticProgramming.fitness.GPFitnessFunctions;
 import geneticProgramming.geneticOperators.AGPCrossover;
 import geneticProgramming.geneticOperators.AGPMutation;
 import geneticProgramming.nodeContents.*;
+import geneticProgramming.nodeContents.factory.VariableFactory;
 import geneticProgramming.nodeContents.factory.constants.ConstantFactory;
 import geneticProgramming.nodeContents.factory.functions.*;
 import geneticProgramming.structure.Node;
@@ -15,7 +17,7 @@ import java.util.Random;
 public class GPEngine {
     private ArrayList<Double> inputNumbers;
     private ArrayList<Tree> population = new ArrayList<>();
-    private GPFitness fitness = new GPFitness();
+    private GPFitnessFunctions fitness = new ChiffLettFitness();
     private Random random = new Random();
     private AGPCrossover crossover;
     private AGPMutation mutation;
@@ -32,6 +34,10 @@ public class GPEngine {
     private ArrayList<Double> meanFitnessHistory = new ArrayList<>();
     private int currentGeneration;
     private IContentFunctionFactory contentFactory;
+    private int upperBound;
+    private int lowerBound;
+    private ArrayList<Point> spacePoints = new ArrayList<>();
+    private boolean chiff = true;
 
 
     public GPEngine(int populationSize, int maxDepth, double mutationRate){
@@ -113,11 +119,11 @@ public class GPEngine {
         return false;
     }
 
-    public Tree executeAlgorithm(int maxGenerations, int selectionWindowSize, GPFitness fitness,
+    public Tree executeAlgorithm(int maxGenerations, int selectionWindowSize, GPFitnessFunctions fitness,
                                        AGPCrossover crossover, AGPMutation mutation){
         this.crossover = crossover;
         this.mutation = mutation;
-        population = generateTrees(populationSize, maxDepth, false);
+        population = generateTrees(populationSize, maxDepth);
         setMutationRate(mutationRate);
         setFitness(fitness);
         setSelectionWindowSize(selectionWindowSize);
@@ -145,7 +151,7 @@ public class GPEngine {
         return mutationRate;
     }
 
-    public void setFitness(GPFitness fitness) {
+    public void setFitness(GPFitnessFunctions fitness) {
         this.fitness = fitness;
     }
 
@@ -191,7 +197,7 @@ public class GPEngine {
      * @param populationSize amount of Trees to be generated
      * @return ArrayList containing the resulting Trees
      */
-    public ArrayList<Tree> generateTrees(int populationSize, int maxDepth, boolean randomOrder){
+    public ArrayList<Tree> generateTrees(int populationSize, int maxDepth){
         // Create empty arrays for each generation
         ArrayList<ArrayList<Tree>> allTrees = new ArrayList<>();
         ArrayList<ContentFunctionFactory> functions = new ArrayList<>();
@@ -206,9 +212,20 @@ public class GPEngine {
         functions.add(new TimesFunctionFactory());
         functions.add(new DividedFunctionFactory());
         ConstantFactory constFactory = new ConstantFactory();
+        VariableFactory varFactory = new VariableFactory();
         if (maxDepth == 0){
             Node leaf = new Node(null,null,null);
-            leaf.setContent(new ContentConstant(inputNumbers.get(random.nextInt(inputNumbers.size())), null));
+            if (isChiff()){
+                leaf.setContent(new ContentConstant(inputNumbers.get(random.nextInt(inputNumbers.size())), null));
+            }
+            else {
+                if (Math.random() < 0.5) {
+                    leaf.setContent(constFactory.create(random.nextInt(upperBound - lowerBound) + lowerBound, leaf));
+                }
+                else{
+                    leaf.setContent(varFactory.create('x',0, leaf));
+                }
+            }
             Tree tree = new Tree(leaf);
             ArrayList<Tree> trees = new ArrayList<>();
             trees.add(tree);
@@ -218,13 +235,17 @@ public class GPEngine {
         for (int i = 0; i < populationSize; i ++){
             Content constant = null;
             Node aNode = new Node(null, null, null);
-//            if (randomOrder){
-//                constant = constFactory.create(inputNumbers.get(random.nextInt(inputNumbers.size())), aNode);
-//            }
-//            else{
-//                constant = constFactory.create(inputNumbers.get(i),aNode);
-//            }
-            constant = constFactory.create(inputNumbers.get(random.nextInt(inputNumbers.size())), aNode);
+            if (this.chiff){
+                constant = constFactory.create(inputNumbers.get(random.nextInt(inputNumbers.size())), aNode);
+            }
+            else{
+                if (Math.random() < 0.5) {
+                    constant = constFactory.create(random.nextInt(upperBound - lowerBound) + lowerBound, aNode);
+                }
+                else{
+                    constant = varFactory.create('x',0, aNode);
+                }
+            }
             aNode.setContent(constant);
             Tree aTree = new Tree(aNode);
             allTrees.get(0).add(aTree);
@@ -236,7 +257,7 @@ public class GPEngine {
                 int p1 = random.nextInt(allTrees.get(i - 1).size());
                 int p2 = random.nextInt(allTrees.get(i - 1).size());
                 while (p2 == p1 && populationSize != 1){
-                    p2 = random.nextInt(inputNumbers.size());
+                    p2 = random.nextInt(allTrees.get(i - 1).size());
                 }
                 int op = random.nextInt(4);
 
@@ -251,5 +272,26 @@ public class GPEngine {
             }
         }
         return allTrees.get(maxDepth - 1);
+    }
+
+    public void setBounds(int upperBound, int lowerBound) {
+        this.upperBound = upperBound;
+        this.lowerBound = lowerBound;
+    }
+
+    public ArrayList<Point> getPoints() {
+        return spacePoints;
+    }
+
+    public void setSpacePoints(ArrayList<Point> spacePoints) {
+        this.spacePoints = spacePoints;
+    }
+
+    public void setChiff(boolean chiff) {
+        this.chiff = chiff;
+    }
+
+    public boolean isChiff() {
+        return chiff;
     }
 }

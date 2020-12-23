@@ -59,7 +59,7 @@ public class Node {
     }
 
     public String print(){
-        String cont=content.print();
+        String cont = content.print();
         if(left==null){
             return cont;
         }

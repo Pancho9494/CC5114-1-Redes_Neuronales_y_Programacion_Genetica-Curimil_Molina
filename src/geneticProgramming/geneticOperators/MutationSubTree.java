@@ -31,7 +31,7 @@ public class MutationSubTree extends AGPMutation {
             int distanceFromRoot = copy.depth() - copy.extractSubTree(MP).depth();
             int topDepthPermitted = engine.getMaxDepth() - distanceFromRoot;
             int depthChosen = random.nextInt(topDepthPermitted);
-            Tree randomTree = engine.generateTrees(1,depthChosen, true).get(0);
+            Tree randomTree = engine.generateTrees(1,depthChosen).get(0);
             copy = copy.replaceSubTree(randomTree,MP);
             ArrayList<Node> nodes = copy.inOrder();
             nodes.remove(copy.getRoot());
@@ -46,23 +46,25 @@ public class MutationSubTree extends AGPMutation {
                     seen.add((double) node.value().getContent());
                 }
             }
-            for (int i = 0; i < engine.getInputNumbers().size(); i ++){
-                if (!seen.contains(engine.getInputNumbers().get(i))){
-                    available.add(engine.getInputNumbers().get(i));
+            if (engine.isChiff()){
+                for (int i = 0; i < engine.getInputNumbers().size(); i ++){
+                    if (!seen.contains(engine.getInputNumbers().get(i))){
+                        available.add(engine.getInputNumbers().get(i));
+                    }
                 }
-            }
-            ArrayList<Node> toBeRemoved = new ArrayList<>();
-            for (Node dup: repeated){
-                if (available.size() == 0){
-                    break;
+                ArrayList<Node> toBeRemoved = new ArrayList<>();
+                for (Node dup: repeated){
+                    if (available.size() == 0){
+                        break;
+                    }
+                    ConstantFactory contFact = new ConstantFactory();
+                    double newValue = available.get(random.nextInt(available.size()));
+                    dup.setContent(contFact.create(newValue, dup));
+                    toBeRemoved.add(dup);
+                    available.remove(newValue);
                 }
-                ConstantFactory contFact = new ConstantFactory();
-                double newValue = available.get(random.nextInt(available.size()));
-                dup.setContent(contFact.create(newValue, dup));
-                toBeRemoved.add(dup);
-                available.remove(newValue);
+                repeated.removeAll(toBeRemoved);
             }
-            repeated.removeAll(toBeRemoved);
         }
         return copy;
     }

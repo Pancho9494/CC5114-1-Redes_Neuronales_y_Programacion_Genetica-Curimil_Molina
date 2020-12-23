@@ -34,7 +34,7 @@ public class ContentVariable extends Content {
 
     @Override
     public Content acceptCopy(CopyVisitor copyVisitor) {
-        return copyVisitor.forVariable(this, identifier);
+        return copyVisitor.forVariable(this.content, identifier);
     }
 
     @Override

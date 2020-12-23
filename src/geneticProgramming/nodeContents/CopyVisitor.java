@@ -27,7 +27,7 @@ public class CopyVisitor {
         return newDivided;
     }
 
-    public Content forVariable(Content cont, char identifier) {
+    public Content forVariable(double cont, char identifier) {
         ContentVariable newVariable = new ContentVariable(identifier);
         newVariable.setContent(cont);
         return newVariable;

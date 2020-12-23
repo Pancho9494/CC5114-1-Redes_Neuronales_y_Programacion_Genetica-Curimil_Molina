@@ -123,13 +123,17 @@ public class Tree {
         currentNode.setContent(newSubTree.getRoot().value());
         currentNode.setLeft(newSubTree.getRoot().getLeft());
         currentNode.setRight(newSubTree.getRoot().getRight());
-        this.print = print();
-        this.score = evaluate();
+        updateMarkers();
         return this;
     }
 
     public Tree extractSubTree(int index){
         return new Tree(nodeAt(index));
+    }
+
+    public void updateMarkers(){
+        this.print = print2();
+        this.score = evaluate();
     }
 
 

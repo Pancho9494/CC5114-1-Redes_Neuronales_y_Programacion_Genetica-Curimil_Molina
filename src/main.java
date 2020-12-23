@@ -6,8 +6,9 @@ import geneticAlgorithm.geneticOperators.*;
 
 import geneticProgramming.FXGP;
 import geneticProgramming.GPEngine;
-import geneticProgramming.fitness.GPFitness;
-import geneticProgramming.geneticOperators.AGPCrossover;
+import geneticProgramming.Point;
+import geneticProgramming.fitness.ChiffLettFitness;
+import geneticProgramming.fitness.PointsFitness;
 import geneticProgramming.geneticOperators.CrossoverSubTree;
 import geneticProgramming.geneticOperators.MutationSubTree;
 import geneticProgramming.structure.Tree;
@@ -29,6 +30,40 @@ public class main extends Application {
 //        wordFinder("paralelepipedo");
 //        binaryFinder(121);
 //        nQueenFinder(5);
+//        ChiffLett();
+        spacePoints();
+    }
+
+    public static void spacePoints() {
+        double target = 595.0;
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(3,4));
+        points.add(new Point(6,2));
+        points.add(new Point(7,5));
+
+        GPEngine GP = new GPEngine(550,4, 0.4);
+        GP.setBounds(100,1);
+        GP.setSpacePoints(points);
+        GP.setChiff(false);
+        PointsFitness fit = new PointsFitness();
+        fit.setTarget(points.size());
+        fit.setEngine(GP);
+        CrossoverSubTree cross = new CrossoverSubTree(GP);
+        MutationSubTree mutate = new MutationSubTree(GP);
+
+        Tree result = GP.executeAlgorithm(100,25, fit,cross,mutate);
+        System.out.println(result.print2());
+        System.out.println(result.evaluate());
+
+        demoGP = new FXGP();
+        demoGP.setGPEngine(GP);
+        demoGP.setUpData(GP.getBestFitnessHistory(), GP.getWorstFitnessHistory(),
+                GP.getMeanFitnessHistory());
+        demoGP.launch();
+        Platform.exit();
+    }
+
+    public static void ChiffLett() {
         double target = 595.0;
         ArrayList<Double> numbers = new ArrayList<>();
         numbers.add(10.0);
@@ -38,9 +73,10 @@ public class main extends Application {
         numbers.add(3.0);
         numbers.add(6.0);
 
-        GPEngine GP = new GPEngine(300,5, 0.2);
+        GPEngine GP = new GPEngine(300,3, 0.2);
+        GP.setBounds(25,1);
         GP.setInputNumbers(numbers);
-        GPFitness fit = new GPFitness();
+        ChiffLettFitness fit = new ChiffLettFitness();
         fit.setTarget(target);
         CrossoverSubTree cross = new CrossoverSubTree(GP);
         MutationSubTree mutate = new MutationSubTree(GP);

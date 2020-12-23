@@ -6,17 +6,9 @@ import geneticProgramming.structure.Tree;
 
 import java.util.ArrayList;
 
-public class GPFitness {
-    double target;
+public class ChiffLettFitness extends GPFitnessFunctions {
 
-    public void setTarget(double input){
-        this.target = input;
-    }
-
-    public double getTarget() {
-        return target;
-    }
-
+    @Override
     public double evaluate(Tree test){
         ArrayList<Object> seen = new ArrayList<>();
         ArrayList<Node> nodes = test.inOrder();

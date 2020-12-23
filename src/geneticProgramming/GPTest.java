@@ -93,7 +93,7 @@ public class GPTest {
         GPEngine GP = new GPEngine(4,3,0);
         GP.setInputNumbers(numbers);
         GP.setRandomSeed(42);
-        ArrayList<Tree> Trees = GP.generateTrees(4,3,false);
+        ArrayList<Tree> Trees = GP.generateTrees(4,3);
         Tree test = Trees.get(0);
 
         Tree one = test.extractSubTree(0);
@@ -184,7 +184,7 @@ public class GPTest {
         double mutRate = 0.5;
         GPEngine GP = new GPEngine(popSize, maxDepth, mutRate);
         GP.setInputNumbers(numbers);
-        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth, false);
+        ArrayList<Tree> population = GP.generateTrees(popSize, maxDepth);
 //        String out = null;
         for (int i = 0; i < 5; i++){
             assertTrue(population.get(i).depth() <= 3);
