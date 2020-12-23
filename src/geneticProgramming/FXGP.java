@@ -31,11 +31,11 @@ public class FXGP extends GPFXPlotter {
         int yCenter = 20;
         int vSpacing = 25;
 
-        Label title = new Label("Genetic Algorithm Results");
+        Label title = new Label("Genetic Programmming Results");
         title.setLayoutX(xCenter - 10);
         title.setLayoutY(yCenter - 5);
 
-        Label bestIndividual = new Label(  "Best Individual:    " + GPEngine.getCurrentBest().print());
+        Label bestIndividual = new Label(  "Best Individual:    " + GPEngine.getCurrentBest().print2());
         bestIndividual.setLayoutX(30);
         bestIndividual.setLayoutY(yCenter + 40 + vSpacing);
 

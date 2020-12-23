@@ -41,4 +41,9 @@ public class ContentConstant extends Content {
     public Content acceptCopy(CopyVisitor copyVisitor) {
         return copyVisitor.forConstant(this);
     }
+
+    @Override
+    public String print() {
+        return String.valueOf(content);
+    }
 }
