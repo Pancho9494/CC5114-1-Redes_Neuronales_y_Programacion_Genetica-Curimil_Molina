@@ -10,4 +10,5 @@ public abstract class Content {
     public abstract Object getContent();
     public abstract double acceptEvaluation(EvaluationVisitor evaluationVisitor, Node node);
     public abstract Content acceptCopy(CopyVisitor copyVisitor);
+    public abstract String print();
 }
