@@ -11,7 +11,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.util.Collections;
 
 public class FXGP extends GPFXPlotter {
@@ -35,7 +34,7 @@ public class FXGP extends GPFXPlotter {
         title.setLayoutX(xCenter - 10);
         title.setLayoutY(yCenter - 5);
 
-        Label bestIndividual = new Label(  "Best Individual:    " + GPEngine.getCurrentBest().print2());
+        Label bestIndividual = new Label(  "Best Individual:    " + GPEngine.getCurrentBest().realPrint());
         bestIndividual.setLayoutX(30);
         bestIndividual.setLayoutY(yCenter + 40 + vSpacing);
 

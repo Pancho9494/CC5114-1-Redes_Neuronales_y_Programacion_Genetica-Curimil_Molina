@@ -2,10 +2,10 @@ package geneticProgramming;
 
 import geneticProgramming.geneticOperators.CrossoverSubTree;
 import geneticProgramming.geneticOperators.MutationSubTree;
-import geneticProgramming.nodeContents.ContentConstant;
-import geneticProgramming.nodeContents.ContentFunction;
-import geneticProgramming.nodeContents.ContentFunctionPlus;
-import geneticProgramming.nodeContents.ContentFunctionTimes;
+import geneticProgramming.nodeContents.contents.ContentConstant;
+import geneticProgramming.nodeContents.contents.ContentFunction;
+import geneticProgramming.nodeContents.contents.ContentFunctionPlus;
+import geneticProgramming.nodeContents.contents.ContentFunctionTimes;
 import geneticProgramming.structure.Node;
 import geneticProgramming.structure.Tree;
 import org.junit.Before;

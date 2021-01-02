@@ -1,7 +1,7 @@
 package geneticProgramming.nodeContents.factory.functions;
 
-import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.ContentFunctionMinus;
+import geneticProgramming.nodeContents.contents.Content;
+import geneticProgramming.nodeContents.contents.ContentFunctionMinus;
 import geneticProgramming.structure.Node;
 
 public class MinusFunctionFactory extends ContentFunctionFactory {

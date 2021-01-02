@@ -1,5 +1,7 @@
-package geneticProgramming.nodeContents;
+package geneticProgramming.nodeContents.contents;
 
+import geneticProgramming.nodeContents.visitors.CopyVisitor;
+import geneticProgramming.nodeContents.visitors.EvaluationVisitor;
 import geneticProgramming.structure.Node;
 
 public class ContentFunctionTimes extends ContentFunction {

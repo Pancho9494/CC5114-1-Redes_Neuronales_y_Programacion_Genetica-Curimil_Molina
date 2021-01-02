@@ -27,11 +27,8 @@ public class main extends Application {
     private static FXGP demoGP;
 
     public static void main(String[] args) {
-//        wordFinder("paralelepipedo");
-//        binaryFinder(121);
-//        nQueenFinder(5);
-//        ChiffLett();
-        spacePoints();
+        ChiffLett();
+//        spacePoints();
     }
 
     public static void spacePoints() {
@@ -41,7 +38,7 @@ public class main extends Application {
         points.add(new Point(6,2));
         points.add(new Point(7,5));
 
-        GPEngine GP = new GPEngine(550,4, 0.4);
+        GPEngine GP = new GPEngine(500,4, 0.5);
         GP.setBounds(100,1);
         GP.setSpacePoints(points);
         GP.setChiff(false);
@@ -51,8 +48,8 @@ public class main extends Application {
         CrossoverSubTree cross = new CrossoverSubTree(GP);
         MutationSubTree mutate = new MutationSubTree(GP);
 
-        Tree result = GP.executeAlgorithm(100,25, fit,cross,mutate);
-        System.out.println(result.print2());
+        Tree result = GP.executeAlgorithm(200,25, fit,cross,mutate);
+        System.out.println(result.realPrint());
         System.out.println(result.evaluate());
 
         demoGP = new FXGP();
@@ -73,7 +70,7 @@ public class main extends Application {
         numbers.add(3.0);
         numbers.add(6.0);
 
-        GPEngine GP = new GPEngine(300,3, 0.2);
+        GPEngine GP = new GPEngine(1000,5, 0.5);
         GP.setBounds(25,1);
         GP.setInputNumbers(numbers);
         ChiffLettFitness fit = new ChiffLettFitness();
@@ -82,7 +79,7 @@ public class main extends Application {
         MutationSubTree mutate = new MutationSubTree(GP);
 
         Tree result = GP.executeAlgorithm(200,25, fit,cross,mutate);
-        System.out.println(result.print2());
+        System.out.println(result.realPrint());
         System.out.println(result.evaluate());
 
         demoGP = new FXGP();

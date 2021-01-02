@@ -1,4 +1,4 @@
-package geneticProgramming.nodeContents;
+package geneticProgramming.nodeContents.contents;
 
 import geneticProgramming.structure.Node;
 

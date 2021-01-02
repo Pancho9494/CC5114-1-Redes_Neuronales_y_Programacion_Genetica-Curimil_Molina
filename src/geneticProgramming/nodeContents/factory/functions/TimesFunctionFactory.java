@@ -1,7 +1,7 @@
 package geneticProgramming.nodeContents.factory.functions;
 
-import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.ContentFunctionTimes;
+import geneticProgramming.nodeContents.contents.Content;
+import geneticProgramming.nodeContents.contents.ContentFunctionTimes;
 import geneticProgramming.structure.Node;
 
 public class TimesFunctionFactory extends ContentFunctionFactory {

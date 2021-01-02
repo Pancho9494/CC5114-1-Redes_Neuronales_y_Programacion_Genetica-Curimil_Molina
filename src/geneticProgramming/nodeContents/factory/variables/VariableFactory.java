@@ -1,7 +1,7 @@
-package geneticProgramming.nodeContents.factory;
+package geneticProgramming.nodeContents.factory.variables;
 
-import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.ContentVariable;
+import geneticProgramming.nodeContents.contents.Content;
+import geneticProgramming.nodeContents.contents.ContentVariable;
 import geneticProgramming.structure.Node;
 
 public class VariableFactory {

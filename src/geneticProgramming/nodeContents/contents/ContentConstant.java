@@ -1,5 +1,7 @@
-package geneticProgramming.nodeContents;
+package geneticProgramming.nodeContents.contents;
 
+import geneticProgramming.nodeContents.visitors.CopyVisitor;
+import geneticProgramming.nodeContents.visitors.EvaluationVisitor;
 import geneticProgramming.nodeContents.factory.constants.ContentConstantFactory;
 import geneticProgramming.structure.Node;
 
@@ -10,6 +12,22 @@ public class ContentConstant extends Content {
     public ContentConstant(double content, ContentConstantFactory factory){
         this.content = content;
         this.factory = factory;
+    }
+
+    @Override
+    public double acceptEvaluation(EvaluationVisitor evaluationVisitor, Node owner) {
+        this.ownerNode = owner;
+        return evaluationVisitor.forConstant(this.ownerNode);
+    }
+
+    @Override
+    public Content acceptCopy(CopyVisitor copyVisitor) {
+        return copyVisitor.forConstant(this);
+    }
+
+    @Override
+    public String print() {
+        return String.valueOf(content);
     }
 
     public ContentConstantFactory getFactory() {
@@ -31,19 +49,5 @@ public class ContentConstant extends Content {
         return content;
     }
 
-    @Override
-    public double acceptEvaluation(EvaluationVisitor evaluationVisitor, Node owner) {
-        this.ownerNode = owner;
-        return evaluationVisitor.forConstant(this.ownerNode);
-    }
 
-    @Override
-    public Content acceptCopy(CopyVisitor copyVisitor) {
-        return copyVisitor.forConstant(this);
-    }
-
-    @Override
-    public String print() {
-        return String.valueOf(content);
-    }
 }

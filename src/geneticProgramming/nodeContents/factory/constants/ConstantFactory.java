@@ -1,7 +1,7 @@
 package geneticProgramming.nodeContents.factory.constants;
 
-import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.ContentConstant;
+import geneticProgramming.nodeContents.contents.Content;
+import geneticProgramming.nodeContents.contents.ContentConstant;
 import geneticProgramming.structure.Node;
 
 public class ConstantFactory extends ContentConstantFactory {

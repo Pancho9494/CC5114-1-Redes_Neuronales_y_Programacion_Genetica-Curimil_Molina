@@ -1,4 +1,6 @@
-package geneticProgramming.nodeContents;
+package geneticProgramming.nodeContents.visitors;
+
+import geneticProgramming.nodeContents.contents.*;
 
 public class CopyVisitor {
 

@@ -1,6 +1,6 @@
 package geneticProgramming.nodeContents.factory.functions;
 
-import geneticProgramming.nodeContents.Content;
+import geneticProgramming.nodeContents.contents.Content;
 import geneticProgramming.structure.Node;
 
 public abstract class ContentFunctionFactory implements IContentFunctionFactory {

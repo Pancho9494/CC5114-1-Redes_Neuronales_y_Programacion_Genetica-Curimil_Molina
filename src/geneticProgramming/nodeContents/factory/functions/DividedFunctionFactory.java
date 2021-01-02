@@ -1,7 +1,7 @@
 package geneticProgramming.nodeContents.factory.functions;
 
-import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.ContentFunctionDivided;
+import geneticProgramming.nodeContents.contents.Content;
+import geneticProgramming.nodeContents.contents.ContentFunctionDivided;
 import geneticProgramming.structure.Node;
 
 public class DividedFunctionFactory extends ContentFunctionFactory {

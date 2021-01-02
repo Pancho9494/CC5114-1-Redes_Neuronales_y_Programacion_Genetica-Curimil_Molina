@@ -1,15 +1,17 @@
 package geneticProgramming.geneticOperators;
 
 import geneticProgramming.GPEngine;
-import geneticProgramming.nodeContents.Content;
-import geneticProgramming.nodeContents.ContentConstant;
+import geneticProgramming.nodeContents.contents.ContentConstant;
 import geneticProgramming.nodeContents.factory.constants.ConstantFactory;
-import geneticProgramming.nodeContents.factory.constants.ContentConstantFactory;
 import geneticProgramming.structure.Node;
 import geneticProgramming.structure.Tree;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a mutation operation that replaces
+ * a random subTree with a randomly generated new subTree
+ */
 public class MutationSubTree extends AGPMutation {
 
     public MutationSubTree(GPEngine engine){
@@ -17,9 +19,13 @@ public class MutationSubTree extends AGPMutation {
     }
 
     /**
-     * Random mutation of a Tree
-     * Choose a random Node from the original Tree
-     * A random Tree is generated, with a depth equal to the depth of the sub-Tree of the chosen Node
+     * The algorithm goes as follows:
+     * 1. Make a copy of the tree
+     * 2. Select a random mutation point in the copy (MP)
+     * 3. Generate a random subTree
+     * 4. Replace the subTree in MP with the new subTree
+     * 5. Return the modified copy
+     * This operation makes sure the resulting tree doesn't exceed the max Depth
      * @param original the original Tree
      * @return the mutated Tree
      */
@@ -68,9 +74,4 @@ public class MutationSubTree extends AGPMutation {
         }
         return copy;
     }
-
-    public void setRandomSeed(int seed){
-        this.random.setSeed(seed);
-    }
-
 }

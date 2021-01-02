@@ -1,6 +1,6 @@
 package geneticProgramming.nodeContents.factory.constants;
 
-import geneticProgramming.nodeContents.Content;
+import geneticProgramming.nodeContents.contents.Content;
 import geneticProgramming.structure.Node;
 
 public abstract class ContentConstantFactory implements IContentConstantFactory {
