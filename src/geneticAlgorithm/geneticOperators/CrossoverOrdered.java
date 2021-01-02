@@ -13,7 +13,7 @@ import java.util.Collections;
  * this is due to the fact that in the last for loop of crossover() the remaining genes are filled with queens instead
  * of a common method among individuals
  */
-public class CrossoverOrdered extends ACrossover {
+public class CrossoverOrdered extends AGACrossover {
 
     /**
      * Two random indices (index1,index2) are chosen to extract a portion of the genes of the parent1

@@ -21,7 +21,7 @@ import static junit.framework.TestCase.*;
 
 public class GATest {
     Random random = new Random();
-    Engine testPop;
+    GAEngine testPop;
     int populationSize;
     int genes;
 
@@ -54,7 +54,7 @@ public class GATest {
     @Test
     public void generateWordTest(){
         int test = random.nextInt(100);
-        testPop = new Engine();
+        testPop = new GAEngine();
         testPop.initializePopulation(populationSize,5);
         assertEquals(test,testPop.generateIndividual(test).getChromosomeSize());
 
@@ -62,7 +62,7 @@ public class GATest {
 
     @Test
     public void initializePopulationTest(){
-        testPop = new Engine();
+        testPop = new GAEngine();
         testPop.initializePopulation(populationSize,5);
         assertEquals(populationSize,testPop.getPopulationSize());
         for (int i = 0; i < populationSize; i ++){
@@ -72,7 +72,7 @@ public class GATest {
 
     @Test
     public void tournamentSelectionTest(){
-        testPop = new Engine();
+        testPop = new GAEngine();
         testPop.initializePopulation(populationSize,3);
         testPop.setTargetWord("cat");
         IndividualFactory factory = new WordFactory();
@@ -84,7 +84,7 @@ public class GATest {
 
     @Test
     public void crossoverTest(){
-        testPop = new Engine();
+        testPop = new GAEngine();
         Crossover cross = new Crossover();
         testPop.setCrossover(cross);
         IndividualFactory factory = new WordFactory();
@@ -100,7 +100,7 @@ public class GATest {
 
     @Test
     public void mutationTest(){
-        testPop = new Engine();
+        testPop = new GAEngine();
         IndividualFactory factory = new WordFactory();
         testPop.initializePopulation(populationSize,3);
         Individual original = stringToIndividual("cat");
@@ -135,7 +135,7 @@ public class GATest {
 
     @Test
     public void newGenerationTest(){
-        testPop = new Engine();
+        testPop = new GAEngine();
         IndividualFactory factory = new WordFactory();
         testPop.setIndividualFactory(factory);
         testPop.initializePopulation(10,3);
@@ -159,9 +159,9 @@ public class GATest {
     public void algorithmTest(){
         // Simple word
         String word = "cat";
-        testPop = new Engine();
+        testPop = new GAEngine();
         Crossover cross = new Crossover();
-        AMutation mutate = new Mutation();
+        AGAMutation mutate = new Mutation();
         testPop.setCrossover(cross);
         IndividualFactory factory = new WordFactory();
         FitnessMatchWords fitFunction = new FitnessMatchWords(stringToIndividual(word), factory);
@@ -195,7 +195,7 @@ public class GATest {
 
     @Test
     public void orderedCrossoverTest(){
-        ACrossover cross = new CrossoverOrdered();
+        AGACrossover cross = new CrossoverOrdered();
         IndividualFactory fact = new WordFactory();
         Individual parent1 = stringToIndividual("table");
         Individual parent2 = stringToIndividual("chair");

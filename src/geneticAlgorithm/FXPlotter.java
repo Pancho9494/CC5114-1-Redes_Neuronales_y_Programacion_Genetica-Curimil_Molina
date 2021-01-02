@@ -14,7 +14,7 @@ public abstract class FXPlotter extends Application {
     protected ArrayList<Integer> dataBest = new ArrayList<>();
     protected ArrayList<Integer> dataWorst = new ArrayList<>();
     protected ArrayList<Integer> dataMean = new ArrayList<>();
-    protected Engine engine;
+    protected GAEngine GAEngine;
     protected int iterations;
     protected Individual target;
 
@@ -54,8 +54,8 @@ public abstract class FXPlotter extends Application {
         this.target = target;
     }
 
-    public void setEngine(Engine engine){
-        this.engine = engine;
+    public void setGAEngine(GAEngine GAEngine){
+        this.GAEngine = GAEngine;
     }
 }
 
